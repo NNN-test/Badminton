@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Badminton Party - ก๊วนแบดมินตันสุดน่ารัก</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Kanit & Mitr) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Mitr:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mint: { 100: '#E6FFFA', 300: '#B2F5EA', 500: '#319795' },
+                        peach: { 100: '#FFEEEA', 300: '#FFBDAD', 500: '#FF7A59' },
+                        softYellow: '#FFF9DB',
+                        cutePurple: '#EAE6FF'
+                    },
+                    fontFamily: {
+                        kanit: ['Kanit', 'sans-serif'],
+                        mitr: ['Mitr', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: #FAF5FF;
+            background-image: radial-gradient(#E2E8F0 1px, transparent 1px);
+            background-size: 16px 16px;
+        }
+        .heading-font {
+            font-family: 'Mitr', sans-serif;
+        }
+    </style>
+</head>
+<body class="text-gray-700 min-h-screen pb-12">
+
+    <!-- Header Navigation -->
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-purple-100 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-peach-500 rounded-2xl flex items-center justify-center text-white text-xl shadow-md transform -rotate-6">
+                    <i class="fa-solid font-bold fa-baseball-bat-ball"></i>
+                </div>
+                <div>
+                    <h1 class="heading-font text-xl font-bold bg-gradient-to-r from-peach-500 to-purple-600 bg-clip-text text-transparent">
+                        Badminton Party 🏸
+                    </h1>
+                    <p class="text-xs text-gray-400">จองคอร์ด & จัดคู่เล่นแบดมินตันสุดน่ารัก</p>
+                </div>
+            </div>
+
+            <!-- Role Switcher -->
+            <div class="bg-gray-100 p-1 rounded-full flex items-center border border-gray-200">
+                <button id="btn-role-user" onclick="switchRole('user')" class="px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-200 bg-white text-peach-500 shadow-sm">
+                    <i class="fa-solid fa-user mr-1"></i> ผู้เล่นทั่วไป
+                </button>
+                <button id="btn-role-admin" onclick="switchRole('admin')" class="px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-200 text-gray-500 hover:text-gray-700">
+                    <i class="fa-solid fa-user-shield mr-1"></i> แอดมิน
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 mt-6">
+
+        <!-- ========================================== -->
+        <!-- USER VIEW (ฝั่งสมาชิกทั่วไปลงชื่อ) -->
+        <!-- ========================================== -->
+        <section id="view-user" class="space-y-6">
+            
+            <!-- Hero Banner -->
+            <div class="bg-gradient-to-r from-peach-100 via-purple-100 to-mint-100 rounded-3xl p-6 shadow-sm border border-white flex flex-col md:flex-row items-center justify-between">
+                <div class="space-y-2 text-center md:text-left mb-4 md:mb-0">
+                    <span class="bg-white/80 text-peach-500 text-xs font-semibold px-3 py-1 rounded-full border border-peach-300">
+                        ✨ มาตีแบดกันเถอะ!
+                    </span>
+                    <h2 class="heading-font text-2xl md:text-3xl font-bold text-gray-800">
+                        ลงชื่อเข้าร่วมก๊วนแบดมินตัน
+                    </h2>
+                    <p class="text-sm text-gray-600">
+                        เลือกวันและช่วงเวลาที่คุณสะดวก แล้วลงชื่อรอแอดมินจัดคอร์ดได้เลย!
+                    </p>
+                </div>
+                <div class="text-5xl animate-bounce">
+                    🏸
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Registration Form -->
+                <div class="md:col-span-1 bg-white rounded-3xl p-6 shadow-sm border border-purple-50">
+                    <h3 class="heading-font text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <i class="fa-solid fa-pen-to-square text-peach-500 mr-2"></i> ฟอร์มลงชื่อเข้าร่วม
+                    </h3>
+                    
+                    <form id="form-join" onsubmit="handleUserSubmit(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">เลือกวันที่</label>
+                            <input type="date" id="user-date" required onchange="renderUserView()" class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-peach-300">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">เลือกช่วงเวลา (1 ชม.)</label>
+                            <select id="user-time-slot" required class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-peach-300">
+                                <option value="17:00-18:00">17:00 - 18:00 น.</option>
+                                <option value="18:00-19:00" selected>18:00 - 19:00 น.</option>
+                                <option value="19:00-20:00">19:00 - 20:00 น.</option>
+                                <option value="20:00-21:00">20:00 - 21:00 น.</option>
+                                <option value="21:00-22:00">21:00 - 22:00 น.</option>
+                            </select>
+                        </div>
+
+                        <!-- Choose Existing Member Database or New Input -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">เลือกจากรายชื่อสมาชิกประจำ</label>
+                            <select id="user-select-preset" onchange="autoFillMemberData()" class="w-full px-3 py-2 border border-purple-200 rounded-xl text-sm bg-purple-50/50 focus:outline-none focus:ring-2 focus:ring-peach-300">
+                                <option value="">-- กรอกข้อมูลใหม่ หรือเลือกสมาชิก --</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">ชื่อเล่นของคุณ</label>
+                            <input type="text" id="user-name" required placeholder="เช่น น้องก๊วน" class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-peach-300">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">ช่องทางติดต่อกลับ (Line ID / เบอร์โทร)</label>
+                            <input type="text" id="user-contact" required placeholder="เช่น Line: badm_party" class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-peach-300">
+                        </div>
+
+                        <button type="submit" class="w-full bg-peach-500 hover:bg-peach-600 text-white font-medium py-2.5 rounded-xl text-sm shadow-md transition transform active:scale-95 flex items-center justify-center">
+                            <i class="fa-solid fa-paper-plane mr-2"></i> ส่งข้อมูลลงชื่อ
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Live Participants List -->
+                <div class="md:col-span-2 bg-white rounded-3xl p-6 shadow-sm border border-purple-50">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="heading-font text-lg font-semibold text-gray-800 flex items-center">
+                            <i class="fa-solid fa-users text-mint-500 mr-2"></i> รายชื่อผู้ลงชื่อในวันที่เลือก
+                        </h3>
+                        <span id="user-view-date-label" class="text-xs bg-purple-50 text-purple-600 px-3 py-1 rounded-full font-medium">
+                            -
+                        </span>
+                    </div>
+
+                    <!-- Slots Container -->
+                    <div id="user-slots-container" class="space-y-4">
+                        <!-- Dynamic content by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- ADMIN VIEW (ฝั่งแอดมินสรุปยอด & จัดคู่) -->
+        <!-- ========================================== -->
+        <section id="view-admin" class="hidden space-y-6">
+            
+            <!-- Admin Controls Header -->
+            <div class="bg-white rounded-3xl p-6 shadow-sm border border-purple-50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="heading-font text-xl font-bold text-gray-800 flex items-center">
+                        <i class="fa-solid fa-sliders text-purple-500 mr-2"></i> แผงควบคุมแอดมิน (Admin Dashboard)
+                    </h2>
+                    <p class="text-xs text-gray-500">จัดการราคา สรุปค่าใช้จ่าย จัดการสมาชิก และสุ่มจัดคอร์ด</p>
+                </div>
+
+                <!-- Admin Date Selector -->
+                <div class="flex items-center space-x-2 w-full md:w-auto">
+                    <label class="text-xs text-gray-500 whitespace-nowrap">เลือกวันที่ดูข้อมูล:</label>
+                    <input type="date" id="admin-date" onchange="renderAdminView()" class="px-3 py-1.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-300">
+                </div>
+            </div>
+
+            <!-- Config & Summary Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Court Price Config -->
+                <div class="bg-white rounded-3xl p-5 shadow-sm border border-purple-50 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h4 class="heading-font text-sm font-semibold text-gray-700 flex items-center">
+                            <i class="fa-solid fa-coins text-yellow-500 mr-2"></i> ตั้งค่าราคาและอัตราส่วน
+                        </h4>
+                        <button onclick="saveAdminConfig()" class="text-xs bg-purple-600 hover:bg-purple-700 text-white px-2.5 py-1 rounded-lg transition">
+                            <i class="fa-solid fa-floppy-disk mr-1"></i> บันทึก
+                        </button>
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-500">ราคาคอร์ดต่อชั่วโมง (บาท)</label>
+                        <input type="number" id="cfg-price-per-hour" value="200" class="w-full mt-1 px-3 py-1.5 border border-gray-200 rounded-xl text-sm">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-500">ราคาค่าลูกแบดมินตัน (ต่อลูก/บาท)</label>
+                        <input type="number" id="cfg-shuttle-price" value="30" class="w-full mt-1 px-3 py-1.5 border border-gray-200 rounded-xl text-sm">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-500">จำนวนคนต่อ 1 สนาม (เพื่อคำนวณการเพิ่มสนาม)</label>
+                        <input type="number" id="cfg-people-per-court" value="4" min="1" class="w-full mt-1 px-3 py-1.5 border border-gray-200 rounded-xl text-sm">
+                    </div>
+                </div>
+
+                <!-- Summary Box -->
+                <div class="md:col-span-2 bg-gradient-to-br from-purple-50 to-peach-50 rounded-3xl p-5 shadow-sm border border-purple-100 flex flex-col justify-between">
+                    <div>
+                        <h4 class="heading-font text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                            <i class="fa-solid fa-chart-pie text-purple-600 mr-2"></i> สรุปยอดการจองรวมของวัน
+                        </h4>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center mt-3">
+                            <div class="bg-white p-3 rounded-2xl border border-purple-100">
+                                <span class="text-xs text-gray-400 block">ผู้เข้าร่วมรวม</span>
+                                <span id="sum-total-people" class="text-xl font-bold text-purple-600">0</span> <span class="text-xs">คน</span>
+                            </div>
+                            <div class="bg-white p-3 rounded-2xl border border-purple-100">
+                                <span class="text-xs text-gray-400 block">ชั่วโมงรวม</span>
+                                <span id="sum-total-hours" class="text-xl font-bold text-peach-500">0</span> <span class="text-xs">ชม.</span>
+                            </div>
+                            <div class="bg-white p-3 rounded-2xl border border-purple-100">
+                                <span class="text-xs text-gray-400 block">ต้องจองรวม</span>
+                                <span id="sum-total-courts" class="text-xl font-bold text-mint-500">0</span> <span class="text-xs">สนาม</span>
+                            </div>
+                            <div class="bg-white p-3 rounded-2xl border border-purple-100">
+                                <span class="text-xs text-gray-400 block">ลูกแบดที่ใช้รวม</span>
+                                <span id="sum-total-shuttles" class="text-xl font-bold text-yellow-500">0</span> <span class="text-xs">ลูก</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 bg-white/70 backdrop-blur-sm p-3 rounded-2xl border border-purple-100 flex justify-between items-center">
+                            <span class="text-xs text-gray-600 font-medium">รวมประมาณการค่าใช้จ่ายทั้งหมด (ค่าสนาม + ค่าลูกแบด):</span>
+                            <span class="text-lg font-bold text-gray-800"><span id="sum-total-price">0</span> บาท</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MEMBER DATABASE MANAGEMENT & HISTORY LOG -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Preset Member Database -->
+                <div class="bg-white rounded-3xl p-6 shadow-sm border border-purple-50 space-y-4">
+                    <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+                        <h3 class="heading-font text-base font-semibold text-gray-800 flex items-center">
+                            <i class="fa-solid fa-address-book text-peach-500 mr-2"></i> จัดการฐานข้อมูลสมาชิกประจำ
+                        </h3>
+                        <button onclick="openAddPresetMemberModal()" class="text-xs bg-peach-500 hover:bg-peach-600 text-white px-3 py-1.5 rounded-xl font-medium shadow-sm transition">
+                            <i class="fa-solid fa-user-plus mr-1"></i> เพิ่มสมาชิก
+                        </button>
+                    </div>
+
+                    <div id="preset-members-list" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+                        <!-- Dynamic preset list -->
+                    </div>
+                </div>
+
+                <!-- History Log Section -->
+                <div class="bg-white rounded-3xl p-6 shadow-sm border border-purple-50 space-y-4">
+                    <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+                        <h3 class="heading-font text-base font-semibold text-gray-800 flex items-center">
+                            <i class="fa-solid fa-clock-rotate-left text-mint-500 mr-2"></i> ประวัติการจองย้อนหลัง
+                        </h3>
+                    </div>
+
+                    <div id="history-log-list" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+                        <!-- Dynamic history logs -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- MEMBER FREQUENCY DASHBOARD -->
+            <div class="bg-white rounded-3xl p-6 shadow-sm border border-purple-50 space-y-4">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 border-b border-gray-100 pb-3">
+                    <div>
+                        <h3 class="heading-font text-lg font-semibold text-gray-800 flex items-center">
+                            <i class="fa-solid fa-chart-user text-peach-500 mr-2"></i> รายงานสถิติสมาชิก (Member Dashboard)
+                        </h3>
+                        <p class="text-xs text-gray-500">ตรวจสอบประวัติความถี่การเข้าร่วมเล่นแบดมินตันของสมาชิกแต่ละคน</p>
+                    </div>
+
+                    <!-- Member Selection Dropdown -->
+                    <div class="flex items-center space-x-2 w-full md:w-auto">
+                        <label class="text-xs text-gray-600 font-medium whitespace-nowrap">เลือกสมาชิก:</label>
+                        <select id="member-stats-select" onchange="renderMemberDashboard()" class="w-full md:w-48 px-3 py-1.5 border border-purple-200 rounded-xl text-xs focus:ring-2 focus:ring-purple-300">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Stats Overview Cards for Selected Member -->
+                <div id="member-stats-content" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <!-- Dynamic Member Stats -->
+                </div>
+            </div>
+
+            <!-- Time Slots & Court Breakdown Management -->
+            <div class="bg-white rounded-3xl p-6 shadow-sm border border-purple-50">
+                <h3 class="heading-font text-lg font-semibold text-gray-800 mb-4">
+                    <i class="fa-solid fa-clock text-peach-500 mr-2"></i> จัดการสมาชิก และสนามย่อยตามรอบเวลา
+                </h3>
+
+                <div id="admin-time-slots-container" class="space-y-6">
+                    <!-- Dynamic slots by JS -->
+                </div>
+            </div>
+
+            <!-- Random Matchmaker Section -->
+            <div class="bg-white rounded-3xl p-6 shadow-sm border border-purple-50">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-3">
+                    <div>
+                        <h3 class="heading-font text-lg font-semibold text-gray-800 flex items-center">
+                            <i class="fa-solid fa-shuffle text-peach-500 mr-2"></i> ระบบสุ่มจับคู่ถาวร & สลับลำดับคิว
+                        </h3>
+                        <p class="text-xs text-gray-500">จับคู่ถาวร (คู่ละ 2 คน) ตั้งแต่แรก + สุ่มคิวสนามแข่ง (ชนะครบ 2 ครั้ง สลับให้คู่อื่นขึ้น)</p>
+                    </div>
+
+                    <div class="flex items-center space-x-2">
+                        <select id="match-slot-select" onchange="renderMatches()" class="px-3 py-1.5 border border-gray-200 rounded-xl text-xs">
+                            <option value="18:00-19:00">รอบ 18:00 - 19:00</option>
+                        </select>
+                        <button onclick="generateMatches()" class="bg-mint-500 hover:bg-mint-600 text-white text-xs font-semibold px-4 py-2 rounded-xl transition shadow-sm">
+                            <i class="fa-solid fa-dice mr-1"></i> สุ่มจับคู่ & จัดคิวใหม่
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Pairs & Queues Display -->
+                <div id="matches-container" class="space-y-6">
+                    <div class="text-center py-8 text-gray-400 text-sm border-2 border-dashed border-gray-100 rounded-2xl">
+                        กดปุ่ม "สุ่มจับคู่ & จัดคิวใหม่" เพื่อเริ่มจัดตารางการแข่งขัน
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Modal Form for Editing Member -->
+    <div id="modal-edit-member" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl space-y-4 m-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="heading-font text-lg font-bold text-gray-800">
+                    <i class="fa-solid fa-user-pen text-peach-500 mr-2"></i> แก้ไขข้อมูลสมาชิก
+                </h3>
+                <button onclick="closeModal('modal-edit-member')" class="text-gray-400 hover:text-gray-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <input type="hidden" id="edit-m-date">
+            <input type="hidden" id="edit-m-slot">
+            <input type="hidden" id="edit-m-id">
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">ชื่อเล่น</label>
+                <input type="text" id="edit-m-name" class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-peach-300">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">ช่องทางติดต่อ</label>
+                <input type="text" id="edit-m-contact" class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-peach-300">
+            </div>
+
+            <div class="flex justify-end space-x-2 pt-2">
+                <button onclick="closeModal('modal-edit-member')" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-xl text-xs text-gray-600 font-medium">ยกเลิก</button>
+                <button onclick="saveMemberEdit()" class="px-4 py-2 bg-peach-500 hover:bg-peach-600 rounded-xl text-xs text-white font-medium">บันทึกการแก้ไข</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Form for Preset Members DB -->
+    <div id="modal-preset-member" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl space-y-4 m-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 id="preset-modal-title" class="heading-font text-lg font-bold text-gray-800">
+                    <i class="fa-solid fa-address-card text-peach-500 mr-2"></i> เพิ่มสมาชิกประจำ
+                </h3>
+                <button onclick="closeModal('modal-preset-member')" class="text-gray-400 hover:text-gray-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <input type="hidden" id="preset-m-id">
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">ชื่อเล่น / ชื่อสมาชิก</label>
+                <input type="text" id="preset-m-name" class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-peach-300" placeholder="เช่น กาย">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">ช่องทางติดต่อ (Line ID / เบอร์โทร)</label>
+                <input type="text" id="preset-m-contact" class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-peach-300" placeholder="เช่น Line: guy123">
+            </div>
+
+            <div class="flex justify-end space-x-2 pt-2">
+                <button onclick="closeModal('modal-preset-member')" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-xl text-xs text-gray-600 font-medium">ยกเลิก</button>
+                <button onclick="savePresetMember()" class="px-4 py-2 bg-peach-500 hover:bg-peach-600 rounded-xl text-xs text-white font-medium">บันทึกสมาชิก</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MOTIVATIONAL POPUP MODAL -->
+    <div id="modal-motivation" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl text-center space-y-4 m-4 border-2 border-peach-300 transform transition-all animate-bounce-once">
+            <div class="w-16 h-16 bg-peach-100 text-peach-500 rounded-full flex items-center justify-center text-3xl mx-auto shadow-inner">
+                🏸
+            </div>
+            <h3 class="heading-font text-xl font-bold text-gray-800">
+                ลงชื่อเรียบร้อยแล้ว!
+            </h3>
+            <p id="motivation-text" class="text-sm text-peach-600 bg-peach-50 p-4 rounded-2xl border border-peach-100 font-medium">
+                <!-- Quote loaded dynamically -->
+            </p>
+            <button onclick="closeModal('modal-motivation')" class="w-full py-2.5 bg-peach-500 hover:bg-peach-600 text-white font-semibold text-xs rounded-xl shadow-md transition">
+                รับทราบ! พร้อมลุยเลย 🔥
+            </button>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 transition-all duration-300 bg-gray-800 text-white px-4 py-3 rounded-2xl shadow-lg text-sm flex items-center space-x-2 z-50 pointer-events-none">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-green-400"></i>
+        <span id="toast-message">ข้อความแจ้งเตือน</span>
+    </div>
+
+    <!-- Script Logic -->
+    <script>
+        // Data Structure Storage
+        let appData = JSON.parse(localStorage.getItem('badminton_app_data_v4')) || {
+            config: {
+                pricePerHour: 200,
+                shuttlePrice: 30,
+                peoplePerCourt: 4
+            },
+            // Preset Registered Members Database: [{ id, name, contact }]
+            presetMembers: [
+                { id: 'p1', name: 'น้องก๊วน', contact: 'Line: badm_party' },
+                { id: 'p2', name: 'พี่ตบหนัก', contact: '081-234-5678' }
+            ],
+            // Format: { "YYYY-MM-DD": { "18:00-19:00": { members: [{id, name, contact, courtId}], courts: [{id, name}], shuttlesUsed: 0, note: "" } } }
+            bookings: {},
+            // Format: { "YYYY-MM-DD": { "18:00-19:00": { teams: [], matches: [] } } }
+            matches: {}
+        };
+
+        const TIME_SLOTS = [
+            "17:00-18:00",
+            "18:00-19:00",
+            "19:00-20:00",
+            "20:00-21:00",
+            "21:00-22:00"
+        ];
+
+        // Random Motivational Quotes
+        const MOTIVATION_QUOTES = [
+            "พร้อมลุยแล้ว! วันนี้ตบลูกแบดให้สุดเหงื่อกันไปเลย 🏸✨",
+            "ซ้อมบ่อยๆ รับรองว่าเก่งขึ้นแน่นอน! ไปวอร์มรอได้เลย 💪🔥",
+            "ตีแบดเสร็จ ชวนเพื่อนไปกินชาบูต่อได้นะ! ✨🍲",
+            "เตรียมรองเท้าให้พร้อม แล้วไปออกกำลังกายเติมความสดใสกัน! 💖",
+            "สุขภาพดีไม่มีขาย อยากได้ต้องมาตีแบดก๊วนนี้! 🎉🏸",
+            "วันนี้คู่ต่อสู้อาจจะเก่ง แต่เรามันสายเอ็นจอยอยู่แล้ว! 😄🏸"
+        ];
+
+        let currentRole = 'user';
+
+        // Initialize App
+        window.onload = function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('user-date').value = today;
+            document.getElementById('admin-date').value = today;
+
+            // Load saved config to UI
+            document.getElementById('cfg-price-per-hour').value = appData.config.pricePerHour || 200;
+            document.getElementById('cfg-shuttle-price').value = appData.config.shuttlePrice || 30;
+            document.getElementById('cfg-people-per-court').value = appData.config.peoplePerCourt || 4;
+
+            renderPresetMembersOptions();
+            renderUserView();
+            renderAdminView();
+        };
+
+        function saveData() {
+            localStorage.setItem('badminton_app_data_v4', JSON.stringify(appData));
+        }
+
+        function switchRole(role) {
+            currentRole = role;
+            const btnUser = document.getElementById('btn-role-user');
+            const btnAdmin = document.getElementById('btn-role-admin');
+            const viewUser = document.getElementById('view-user');
+            const viewAdmin = document.getElementById('view-admin');
+
+            if (role === 'user') {
+                btnUser.className = "px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-200 bg-white text-peach-500 shadow-sm";
+                btnAdmin.className = "px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-200 text-gray-500 hover:text-gray-700";
+                viewUser.classList.remove('hidden');
+                viewAdmin.classList.add('hidden');
+                renderUserView();
+            } else {
+                btnAdmin.className = "px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-200 bg-white text-purple-600 shadow-sm";
+                btnUser.className = "px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-200 text-gray-500 hover:text-gray-700";
+                viewAdmin.classList.remove('hidden');
+                viewUser.classList.add('hidden');
+                renderAdminView();
+            }
+        }
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastMsg.innerText = message;
+            toastIcon.className = isError ? "fa-solid fa-circle-exclamation text-red-400" : "fa-solid fa-circle-check text-green-400";
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        function getSlotData(date, slot) {
+            if (!appData.bookings[date]) appData.bookings[date] = {};
+            if (!appData.bookings[date][slot]) {
+                appData.bookings[date][slot] = {
+                    members: [],
+                    courts: [{ id: 'c1', name: 'สนาม 1' }],
+                    shuttlesUsed: 0,
+                    note: ""
+                };
+            }
+            return appData.bookings[date][slot];
+        }
+
+        // ================= PRESET MEMBER DATABASE LOGIC =================
+        function renderPresetMembersOptions() {
+            const select = document.getElementById('user-select-preset');
+            select.innerHTML = '<option value="">-- กรอกข้อมูลใหม่ หรือเลือกสมาชิก --</option>';
+
+            appData.presetMembers.forEach(pm => {
+                const opt = document.createElement('option');
+                opt.value = pm.id;
+                opt.innerText = `${pm.name} (${pm.contact})`;
+                select.appendChild(opt);
+            });
+
+            // Also update preset list in Admin panel
+            renderPresetMembersAdminList();
+        }
+
+        function autoFillMemberData() {
+            const presetId = document.getElementById('user-select-preset').value;
+            if (!presetId) return;
+
+            const pm = appData.presetMembers.find(p => p.id === presetId);
+            if (pm) {
+                document.getElementById('user-name').value = pm.name;
+                document.getElementById('user-contact').value = pm.contact;
+            }
+        }
+
+        function renderPresetMembersAdminList() {
+            const container = document.getElementById('preset-members-list');
+            if (!container) return;
+
+            if (appData.presetMembers.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-400 italic">ยังไม่มีสมาชิกประจำในระบบ</p>`;
+                return;
+            }
+
+            container.innerHTML = appData.presetMembers.map(pm => `
+                <div class="flex items-center justify-between bg-purple-50/50 px-3 py-2 rounded-xl border border-purple-100 text-xs">
+                    <div>
+                        <span class="font-semibold text-gray-800">${pm.name}</span>
+                        <span class="text-gray-500 ml-2">(${pm.contact})</span>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <button onclick="openEditPresetMemberModal('${pm.id}')" class="text-blue-400 hover:text-blue-600 p-1">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button onclick="deletePresetMember('${pm.id}')" class="text-red-400 hover:text-red-600 p-1">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openAddPresetMemberModal() {
+            document.getElementById('preset-m-id').value = '';
+            document.getElementById('preset-m-name').value = '';
+            document.getElementById('preset-m-contact').value = '';
+            document.getElementById('preset-modal-title').innerText = 'เพิ่มสมาชิกประจำ';
+            document.getElementById('modal-preset-member').classList.remove('hidden');
+        }
+
+        function openEditPresetMemberModal(id) {
+            const pm = appData.presetMembers.find(p => p.id === id);
+            if (!pm) return;
+
+            document.getElementById('preset-m-id').value = pm.id;
+            document.getElementById('preset-m-name').value = pm.name;
+            document.getElementById('preset-m-contact').value = pm.contact;
+            document.getElementById('preset-modal-title').innerText = 'แก้ไขสมาชิกประจำ';
+            document.getElementById('modal-preset-member').classList.remove('hidden');
+        }
+
+        function savePresetMember() {
+            const id = document.getElementById('preset-m-id').value;
+            const name = document.getElementById('preset-m-name').value.trim();
+            const contact = document.getElementById('preset-m-contact').value.trim();
+
+            if (!name || !contact) {
+                showToast('กรุณากรอกข้อมูลให้ครบถ้วน', true);
+                return;
+            }
+
+            if (id) {
+                const pm = appData.presetMembers.find(p => p.id === id);
+                if (pm) {
+                    pm.name = name;
+                    pm.contact = contact;
+                }
+            } else {
+                appData.presetMembers.push({
+                    id: 'p_' + Date.now(),
+                    name: name,
+                    contact: contact
+                });
+            }
+
+            saveData();
+            closeModal('modal-preset-member');
+            renderPresetMembersOptions();
+            showToast('บันทึกฐานข้อมูลสมาชิกเรียบร้อยแล้ว');
+        }
+
+        function deletePresetMember(id) {
+            if (!confirm('ยืนยันลบสมาชิกประจำคนนี้จากฐานข้อมูล?')) return;
+            appData.presetMembers = appData.presetMembers.filter(p => p.id !== id);
+            saveData();
+            renderPresetMembersOptions();
+            showToast('ลบสมาชิกออกจากฐานข้อมูลแล้ว');
+        }
+
+        // ================= USER VIEW LOGIC =================
+        function handleUserSubmit(e) {
+            e.preventDefault();
+            const date = document.getElementById('user-date').value;
+            const timeSlot = document.getElementById('user-time-slot').value;
+            const name = document.getElementById('user-name').value.trim();
+            const contact = document.getElementById('user-contact').value.trim();
+
+            if (!date || !name || !contact) return;
+
+            const slotData = getSlotData(date, timeSlot);
+
+            // Check duplicate name in slot
+            const isDuplicate = slotData.members.some(p => p.name === name);
+            if (isDuplicate) {
+                showToast("ชื่อนี้ได้ลงสมัครในรอบเวลานี้แล้วครับ", true);
+                return;
+            }
+
+            slotData.members.push({
+                id: Date.now().toString(),
+                name: name,
+                contact: contact,
+                courtId: slotData.courts[0] ? slotData.courts[0].id : 'c1'
+            });
+
+            saveData();
+            
+            // Show Random Motivational Pop-up
+            const randomQuote = MOTIVATION_QUOTES[Math.floor(Math.random() * MOTIVATION_QUOTES.length)];
+            document.getElementById('motivation-text').innerText = randomQuote;
+            document.getElementById('modal-motivation').classList.remove('hidden');
+
+            document.getElementById('user-name').value = '';
+            document.getElementById('user-contact').value = '';
+            document.getElementById('user-select-preset').value = '';
+
+            renderUserView();
+        }
+
+        function renderUserView() {
+            const date = document.getElementById('user-date').value;
+            document.getElementById('user-view-date-label').innerText = `วันที่: ${date}`;
+
+            const container = document.getElementById('user-slots-container');
+            container.innerHTML = '';
+
+            TIME_SLOTS.forEach(slot => {
+                const slotData = getSlotData(date, slot);
+                const list = slotData.members;
+                const count = list.length;
+                const courts = slotData.courts || [{ id: 'c1', name: 'สนาม 1' }];
+
+                const slotEl = document.createElement('div');
+                slotEl.className = "border border-gray-100 rounded-2xl p-4 bg-gray-50/50 hover:bg-white transition space-y-3";
+
+                let courtsHTML = courts.map(c => {
+                    const courtMembers = list.filter(m => m.courtId === c.id || (!m.courtId && c.id === 'c1'));
+                    const membersChips = courtMembers.length > 0 
+                        ? courtMembers.map(m => `
+                            <span class="inline-flex items-center px-2.5 py-0.5 bg-white border border-purple-100 rounded-full text-xs font-medium text-gray-700 shadow-sm">
+                                <i class="fa-solid fa-user-tag text-peach-500 mr-1 text-[10px]"></i> ${m.name}
+                            </span>
+                        `).join('')
+                        : `<span class="text-xs text-gray-400 italic">ว่าง</span>`;
+
+                    return `
+                        <div class="bg-white/80 p-2.5 rounded-xl border border-gray-100 space-y-1">
+                            <span class="text-xs font-bold text-purple-600 block">
+                                <i class="fa-solid fa-table-tennis-paddle-ball mr-1"></i> ${c.name} (${courtMembers.length} คน)
+                            </span>
+                            <div class="flex flex-wrap gap-1.5">
+                                ${membersChips}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                slotEl.innerHTML = `
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center pb-2 border-b border-gray-100 gap-1">
+                        <div class="flex items-center space-x-2">
+                            <span class="bg-peach-500 text-white text-xs px-2.5 py-1 rounded-lg font-semibold">
+                                <i class="fa-regular fa-clock mr-1"></i> ${slot}
+                            </span>
+                            <span class="text-xs font-medium text-gray-600">
+                                ผู้เล่นรวม <strong class="text-peach-500">${count}</strong> คน
+                            </span>
+                        </div>
+                        <div class="text-xs text-gray-500 bg-mint-100/60 text-mint-500 px-2.5 py-0.5 rounded-full self-start sm:self-auto font-medium">
+                            <i class="fa-solid fa-border-all mr-1"></i> เปิด ${courts.length} สนาม
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        ${courtsHTML}
+                    </div>
+                `;
+                container.appendChild(slotEl);
+            });
+        }
+
+        // ================= ADMIN VIEW LOGIC =================
+        function saveAdminConfig() {
+            appData.config.pricePerHour = parseFloat(document.getElementById('cfg-price-per-hour').value) || 0;
+            appData.config.shuttlePrice = parseFloat(document.getElementById('cfg-shuttle-price').value) || 0;
+            appData.config.peoplePerCourt = parseInt(document.getElementById('cfg-people-per-court').value) || 1;
+            saveData();
+            renderAdminView();
+            showToast("บันทึกการตั้งค่าเรียบร้อยแล้ว");
+        }
+
+        function renderAdminView() {
+            const date = document.getElementById('admin-date').value;
+            const container = document.getElementById('admin-time-slots-container');
+            container.innerHTML = '';
+
+            let totalPeople = 0;
+            let totalHoursWithPeople = 0;
+            let totalCourtsNeeded = 0;
+            let totalShuttles = 0;
+            let totalCourtCostSum = 0;
+            let totalShuttleCostSum = 0;
+
+            const matchSlotSelect = document.getElementById('match-slot-select');
+            const selectedSlotBefore = matchSlotSelect.value;
+            matchSlotSelect.innerHTML = '';
+
+            TIME_SLOTS.forEach(slot => {
+                const slotData = getSlotData(date, slot);
+                const list = slotData.members;
+                const count = list.length;
+                const courts = slotData.courts || [{ id: 'c1', name: 'สนาม 1' }];
+                const courtsNeeded = courts.length;
+                const shuttlesUsed = slotData.shuttlesUsed || 0;
+
+                const courtCost = courtsNeeded * appData.config.pricePerHour;
+                const shuttleCost = shuttlesUsed * appData.config.shuttlePrice;
+                const totalSlotCost = courtCost + shuttleCost;
+                const perPersonAvg = count > 0 ? (totalSlotCost / count).toFixed(1) : 0;
+
+                if (count > 0) {
+                    totalPeople += count;
+                    totalHoursWithPeople += 1;
+                    totalCourtsNeeded += courtsNeeded;
+                    totalShuttles += shuttlesUsed;
+                    totalCourtCostSum += courtCost;
+                    totalShuttleCostSum += shuttleCost;
+                }
+
+                // Append Option to Match Select
+                const opt = document.createElement('option');
+                opt.value = slot;
+                opt.innerText = `รอบ ${slot} (${count} คน)`;
+                matchSlotSelect.appendChild(opt);
+
+                // Build Slot Item Card in Admin
+                const slotDiv = document.createElement('div');
+                slotDiv.className = "bg-gray-50 rounded-2xl p-4 border border-gray-100 space-y-4";
+
+                // Build Courts & Members in Admin
+                let courtsAdminHTML = courts.map(c => {
+                    const courtMembers = list.filter(m => m.courtId === c.id || (!m.courtId && c.id === 'c1'));
+
+                    let membersListHTML = courtMembers.map(m => `
+                        <div class="flex items-center justify-between bg-white px-3 py-1.5 rounded-xl border border-gray-100 shadow-sm text-xs">
+                            <div>
+                                <span class="font-semibold text-gray-800">${m.name}</span>
+                                <span class="text-gray-400 ml-1">(${m.contact})</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <button onclick="openEditMemberModal('${date}', '${slot}', '${m.id}')" class="text-blue-400 hover:text-blue-600 p-1" title="แก้ไข">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                                <button onclick="removeMember('${date}', '${slot}', '${m.id}')" class="text-red-400 hover:text-red-600 p-1" title="ลบ">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    if (courtMembers.length === 0) {
+                        membersListHTML = `<p class="text-xs text-gray-400 italic">ยังไม่มีผู้เล่นในสนามนี้</p>`;
+                    }
+
+                    return `
+                        <div class="bg-white/80 p-3 rounded-xl border border-purple-100 space-y-2">
+                            <div class="flex justify-between items-center pb-1 border-b border-gray-100">
+                                <span class="text-xs font-bold text-purple-700">
+                                    <i class="fa-solid fa-table-tennis-paddle-ball mr-1"></i> ${c.name}
+                                </span>
+                                ${courts.length > 1 ? `
+                                    <button onclick="removeCourtFromSlot('${date}', '${slot}', '${c.id}')" class="text-xs text-red-400 hover:text-red-600">
+                                        <i class="fa-solid fa-xmark mr-1"></i> ลบสนามนี้
+                                    </button>
+                                ` : ''}
+                            </div>
+                            <div class="space-y-1.5">
+                                ${membersListHTML}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                slotDiv.innerHTML = `
+                    <div class="flex flex-col md:flex-row justify-between md:items-center pb-2 border-b border-gray-200 gap-2">
+                        <div class="flex items-center space-x-2">
+                            <span class="bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-xl">
+                                ${slot}
+                            </span>
+                            <span class="text-xs text-gray-600 font-medium">
+                                ผู้เล่นรวม: <strong class="text-purple-600">${count}</strong> คน
+                            </span>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-2 text-xs">
+                            <button onclick="addCourtToSlot('${date}', '${slot}')" class="bg-purple-100 hover:bg-purple-200 text-purple-700 px-2.5 py-1 rounded-lg font-semibold transition">
+                                <i class="fa-solid fa-plus mr-1"></i> เพิ่มสนามในรอบนี้
+                            </button>
+                            <span class="bg-blue-50 text-blue-600 px-2.5 py-1 rounded-lg border border-blue-100">
+                                จอง: <strong>${courtsNeeded}</strong> สนาม
+                            </span>
+                            <span class="bg-green-50 text-green-600 px-2.5 py-1 rounded-lg border border-green-100">
+                                รวมค่าใช้จ่าย: <strong>${totalSlotCost}</strong> ฿
+                            </span>
+                            <span class="bg-orange-50 text-orange-600 px-2.5 py-1 rounded-lg border border-orange-100">
+                                เฉลี่ยคนละ: <strong>${perPersonAvg}</strong> ฿
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Shuttle Cock Counter & Note Edit Row -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-white p-3 rounded-xl border border-gray-100">
+                        <div class="flex items-center space-x-2">
+                            <label class="text-xs font-semibold text-gray-600 whitespace-nowrap">ลูกแบดที่ใช้:</label>
+                            <input type="number" id="shuttle-input-${slot}" value="${shuttlesUsed}" min="0" class="w-16 px-2 py-1 border border-gray-200 rounded-lg text-xs text-center">
+                            <span class="text-xs text-gray-400">ลูก</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <label class="text-xs font-semibold text-gray-600 whitespace-nowrap">หมายเหตุ:</label>
+                            <input type="text" id="note-input-${slot}" value="${slotData.note || ''}" placeholder="เช่น ชำระแล้ว" class="w-full px-2 py-1 border border-gray-200 rounded-lg text-xs">
+                            <button onclick="saveSlotExtraInfo('${date}', '${slot}')" class="text-xs bg-peach-500 hover:bg-peach-600 text-white px-2.5 py-1 rounded-lg whitespace-nowrap font-medium">
+                                บันทึก
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Courts and Member grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                        ${courtsAdminHTML}
+                    </div>
+                `;
+
+                container.appendChild(slotDiv);
+            });
+
+            if (selectedSlotBefore && matchSlotSelect.querySelector(`option[value="${selectedSlotBefore}"]`)) {
+                matchSlotSelect.value = selectedSlotBefore;
+            }
+
+            // Update Summary Stats
+            document.getElementById('sum-total-people').innerText = totalPeople;
+            document.getElementById('sum-total-hours').innerText = totalHoursWithPeople;
+            document.getElementById('sum-total-courts').innerText = totalCourtsNeeded;
+            document.getElementById('sum-total-shuttles').innerText = totalShuttles;
+            const overallPrice = totalCourtCostSum + totalShuttleCostSum;
+            document.getElementById('sum-total-price').innerText = overallPrice.toLocaleString();
+
+            populateMemberDropdown();
+            renderMemberDashboard();
+            renderHistoryLog();
+            renderMatches();
+        }
+
+        function addCourtToSlot(date, slot) {
+            const slotData = getSlotData(date, slot);
+            if (!slotData.courts) slotData.courts = [];
+            const nextNum = slotData.courts.length + 1;
+            slotData.courts.push({
+                id: 'c_' + Date.now(),
+                name: `สนาม ${nextNum}`
+            });
+
+            saveData();
+            renderAdminView();
+            renderUserView();
+            showToast(`เพิ่มสนามในรอบ ${slot} เรียบร้อยแล้ว`);
+        }
+
+        function removeCourtFromSlot(date, slot, courtId) {
+            const slotData = getSlotData(date, slot);
+            if (slotData.courts.length <= 1) {
+                showToast('ต้องมีอย่างน้อย 1 สนามในรอบเวลานี้ครับ', true);
+                return;
+            }
+
+            slotData.courts = slotData.courts.filter(c => c.id !== courtId);
+            // Move members of removed court to court 1
+            const defaultCourtId = slotData.courts[0].id;
+            slotData.members.forEach(m => {
+                if (m.courtId === courtId) m.courtId = defaultCourtId;
+            });
+
+            saveData();
+            renderAdminView();
+            renderUserView();
+            showToast('ลบสนามย่อยเรียบร้อยแล้ว');
+        }
+
+        function saveSlotExtraInfo(date, slot) {
+            const shuttles = parseInt(document.getElementById(`shuttle-input-${slot}`).value) || 0;
+            const note = document.getElementById(`note-input-${slot}`).value.trim();
+
+            const slotData = getSlotData(date, slot);
+            slotData.shuttlesUsed = shuttles;
+            slotData.note = note;
+
+            saveData();
+            renderAdminView();
+            renderUserView();
+            showToast(`บันทึกข้อมูลเพิ่มเติมสำหรับรอบ ${slot} แล้ว`);
+        }
+
+        // CRUD Member Logic
+        function openEditMemberModal(date, slot, memberId) {
+            const slotData = getSlotData(date, slot);
+            const member = slotData.members.find(m => m.id === memberId);
+            if (!member) return;
+
+            document.getElementById('edit-m-date').value = date;
+            document.getElementById('edit-m-slot').value = slot;
+            document.getElementById('edit-m-id').value = memberId;
+            document.getElementById('edit-m-name').value = member.name;
+            document.getElementById('edit-m-contact').value = member.contact;
+
+            document.getElementById('modal-edit-member').classList.remove('hidden');
+        }
+
+        function saveMemberEdit() {
+            const date = document.getElementById('edit-m-date').value;
+            const slot = document.getElementById('edit-m-slot').value;
+            const memberId = document.getElementById('edit-m-id').value;
+            const newName = document.getElementById('edit-m-name').value.trim();
+            const newContact = document.getElementById('edit-m-contact').value.trim();
+
+            if (!newName || !newContact) {
+                showToast("กรุณากรอกข้อมูลให้ครบถ้วน", true);
+                return;
+            }
+
+            const slotData = getSlotData(date, slot);
+            const member = slotData.members.find(m => m.id === memberId);
+            if (member) {
+                member.name = newName;
+                member.contact = newContact;
+                saveData();
+                closeModal('modal-edit-member');
+                renderAdminView();
+                showToast("อัปเดตข้อมูลสมาชิกสำเร็จ");
+            }
+        }
+
+        function removeMember(date, slot, memberId) {
+            if (!confirm('คุณต้องการลบรายชื่อนี้ออกใช่หรือไม่?')) return;
+            
+            const slotData = getSlotData(date, slot);
+            slotData.members = slotData.members.filter(m => m.id !== memberId);
+            saveData();
+            renderAdminView();
+            showToast("ลบรายชื่อเรียบร้อยแล้ว");
+        }
+
+        // ================= HISTORY LOG & BACKUP LOGIC =================
+        function renderHistoryLog() {
+            const container = document.getElementById('history-log-list');
+            if (!container) return;
+
+            const dates = Object.keys(appData.bookings).sort().reverse();
+            if (dates.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-400 italic">ยังไม่มีประวัติการจองในระบบ</p>`;
+                return;
+            }
+
+            container.innerHTML = dates.map(date => {
+                let dayPeople = 0;
+                let dayCourts = 0;
+                let dayPrice = 0;
+
+                Object.keys(appData.bookings[date]).forEach(slot => {
+                    const slotData = appData.bookings[date][slot];
+                    const members = slotData.members || [];
+                    const courts = slotData.courts || [{ id: 'c1' }];
+                    if (members.length > 0) {
+                        dayPeople += members.length;
+                        dayCourts += courts.length;
+                        const cCost = courts.length * appData.config.pricePerHour;
+                        const sCost = (slotData.shuttlesUsed || 0) * appData.config.shuttlePrice;
+                        dayPrice += (cCost + sCost);
+                    }
+                });
+
+                return `
+                    <div class="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-xl border border-gray-100 text-xs">
+                        <div>
+                            <span class="font-bold text-gray-800">${date}</span>
+                            <span class="text-gray-500 ml-2">ผู้เล่น: ${dayPeople} คน | จอง: ${dayCourts} สนาม</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="font-semibold text-purple-600">${dayPrice.toLocaleString()} ฿</span>
+                            <button onclick="loadHistoryDate('${date}')" class="bg-purple-100 hover:bg-purple-200 text-purple-700 px-2 py-0.5 rounded-lg text-[10px] font-medium transition">
+                                ดูข้อมูล
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadHistoryDate(date) {
+            document.getElementById('admin-date').value = date;
+            document.getElementById('user-date').value = date;
+            renderAdminView();
+            renderUserView();
+            showToast(`โหลดข้อมูลของวันที่ ${date} เรียบร้อยแล้ว`);
+        }
+
+        // ================= MEMBER DASHBOARD STATS LOGIC =================
+        function populateMemberDropdown() {
+            const select = document.getElementById('member-stats-select');
+            const allMembers = new Set();
+
+            Object.keys(appData.bookings).forEach(date => {
+                Object.keys(appData.bookings[date]).forEach(slot => {
+                    const members = appData.bookings[date][slot].members || [];
+                    members.forEach(m => allMembers.add(m.name));
+                });
+            });
+
+            const currentSelected = select.value;
+            select.innerHTML = '<option value="ALL">-- แสดงสมาชิกทั้งหมด --</option>';
+
+            Array.from(allMembers).sort().forEach(memberName => {
+                const opt = document.createElement('option');
+                opt.value = memberName;
+                opt.innerText = memberName;
+                select.appendChild(opt);
+            });
+
+            if (currentSelected && select.querySelector(`option[value="${currentSelected}"]`)) {
+                select.value = currentSelected;
+            }
+        }
+
+        function renderMemberDashboard() {
+            const selectedMember = document.getElementById('member-stats-select').value;
+            const container = document.getElementById('member-stats-content');
+            container.innerHTML = '';
+
+            let totalSlotsJoined = 0;
+            let datesJoined = new Set();
+            let totalSpentEst = 0;
+
+            Object.keys(appData.bookings).forEach(date => {
+                Object.keys(appData.bookings[date]).forEach(slot => {
+                    const slotData = appData.bookings[date][slot];
+                    const members = slotData.members || [];
+                    
+                    if (selectedMember === 'ALL') {
+                        if (members.length > 0) {
+                            totalSlotsJoined += members.length;
+                            datesJoined.add(date);
+                        }
+                    } else {
+                        const hasMember = members.some(m => m.name === selectedMember);
+                        if (hasMember) {
+                            totalSlotsJoined += 1;
+                            datesJoined.add(date);
+
+                            const courts = slotData.courts || [{ id: 'c1' }];
+                            const courtCost = courts.length * appData.config.pricePerHour;
+                            const shuttleCost = (slotData.shuttlesUsed || 0) * appData.config.shuttlePrice;
+                            const share = (courtCost + shuttleCost) / (members.length || 1);
+                            totalSpentEst += share;
+                        }
+                    }
+                });
+            });
+
+            if (selectedMember === 'ALL') {
+                container.innerHTML = `
+                    <div class="bg-purple-50 p-4 rounded-2xl border border-purple-100 text-center">
+                        <span class="text-xs text-gray-400 block">สมาชิกในประวัติทั้งหมด</span>
+                        <span class="text-2xl font-bold text-purple-600">${document.getElementById('member-stats-select').options.length - 1}</span> <span class="text-xs">คน</span>
+                    </div>
+                    <div class="bg-peach-50 p-4 rounded-2xl border border-peach-100 text-center">
+                        <span class="text-xs text-gray-400 block">เปิดก๊วนรวมทั้งหมด</span>
+                        <span class="text-2xl font-bold text-peach-500">${datesJoined.size}</span> <span class="text-xs">วัน</span>
+                    </div>
+                    <div class="bg-mint-50 p-4 rounded-2xl border border-mint-100 text-center">
+                        <span class="text-xs text-gray-400 block">ยอดรวมการเข้าเล่นทั้งหมด</span>
+                        <span class="text-2xl font-bold text-mint-500">${totalSlotsJoined}</span> <span class="text-xs">ครั้ง/ชั่วโมง</span>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="bg-purple-50 p-4 rounded-2xl border border-purple-100 text-center">
+                        <span class="text-xs text-gray-400 block">มาเล่นทั้งหมด</span>
+                        <span class="text-2xl font-bold text-purple-600">${totalSlotsJoined}</span> <span class="text-xs">ครั้ง/ชั่วโมง</span>
+                    </div>
+                    <div class="bg-peach-50 p-4 rounded-2xl border border-peach-100 text-center">
+                        <span class="text-xs text-gray-400 block">จำนวนวันที่เข้าร่วม</span>
+                        <span class="text-2xl font-bold text-peach-500">${datesJoined.size}</span> <span class="text-xs">วัน</span>
+                    </div>
+                    <div class="bg-mint-50 p-4 rounded-2xl border border-mint-100 text-center">
+                        <span class="text-xs text-gray-400 block">ประมาณการค่าใช้จ่ายสะสม</span>
+                        <span class="text-2xl font-bold text-mint-500">${Math.round(totalSpentEst)}</span> <span class="text-xs">บาท</span>
+                    </div>
+                `;
+            }
+        }
+
+        // ================= RANDOM FIXED-PAIRS & MATCHMAKER LOGIC =================
+        function generateMatches() {
+            const date = document.getElementById('admin-date').value;
+            const slot = document.getElementById('match-slot-select').value;
+
+            const slotData = getSlotData(date, slot);
+            const participants = [...slotData.members];
+
+            if (participants.length < 4) {
+                showToast("ต้องมีผู้เล่นอย่างน้อย 4 คนขึ้นไปเพื่อสุ่มจับคู่ 2v2", true);
+                return;
+            }
+
+            // 1. Shuffle participants array (Fisher-Yates)
+            for (let i = participants.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [participants[i], participants[j]] = [participants[j], participants[i]];
+            }
+
+            // 2. Pair up fixed teams of 2
+            const fixedTeams = [];
+            let pIndex = 0;
+
+            while (pIndex < participants.length) {
+                if (pIndex + 1 < participants.length) {
+                    fixedTeams.push({
+                        id: 'team_' + Math.random().toString(36).substring(2, 7),
+                        name: `${participants[pIndex].name} + ${participants[pIndex+1].name}`,
+                        p1: participants[pIndex].name,
+                        p2: participants[pIndex+1].name,
+                        wins: 0
+                    });
+                    pIndex += 2;
+                } else {
+                    fixedTeams.push({
+                        id: 'team_' + Math.random().toString(36).substring(2, 7),
+                        name: `${participants[pIndex].name} + (ตัวฟรี/คนสลับ)`,
+                        p1: participants[pIndex].name,
+                        p2: "(ตัวฟรี/คนสลับ)",
+                        wins: 0
+                    });
+                    pIndex += 1;
+                }
+            }
+
+            // 3. Shuffle Team Queues for initial match rotation
+            const shuffledTeams = [...fixedTeams];
+            for (let i = shuffledTeams.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledTeams[i], shuffledTeams[j]] = [shuffledTeams[j], shuffledTeams[i]];
+            }
+
+            // 4. Generate Match Slots
+            const matches = [];
+            const courts = slotData.courts || [{ id: 'c1' }];
+
+            let teamIdx = 0;
+            for (let c = 1; c <= courts.length; c++) {
+                if (teamIdx + 1 < shuffledTeams.length) {
+                    matches.push({
+                        id: 'match_' + c,
+                        courtNum: c,
+                        teamA: shuffledTeams[teamIdx],
+                        teamB: shuffledTeams[teamIdx + 1],
+                        status: 'playing'
+                    });
+                    teamIdx += 2;
+                }
+            }
+
+            // Save fixed teams and current matches state
+            if (!appData.matches[date]) appData.matches[date] = {};
+            appData.matches[date][slot] = {
+                teams: fixedTeams,
+                matches: matches
+            };
+            saveData();
+
+            renderMatches();
+            showToast("สุ่มจับคู่ถาวรและจัดคิวสนามแข่งเรียบร้อยแล้ว!");
+        }
+
+        function renderMatches() {
+            const date = document.getElementById('admin-date').value;
+            const slot = document.getElementById('match-slot-select').value;
+            const container = document.getElementById('matches-container');
+
+            const matchData = (appData.matches[date] && appData.matches[date][slot]) ? appData.matches[date][slot] : null;
+
+            if (!matchData || !matchData.teams || matchData.teams.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-gray-400 text-sm border-2 border-dashed border-gray-100 rounded-2xl">
+                        ยังไม่มีข้อมูลการจับคู่ในรอบนี้ กดปุ่ม "สุ่มจับคู่ & จัดคิวใหม่" เพื่อเริ่มสร้างตาราง
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '';
+
+            // Display Fixed Teams Overview
+            const teamsSection = document.createElement('div');
+            teamsSection.className = "bg-purple-50/50 rounded-2xl p-4 border border-purple-100";
+            let teamChips = matchData.teams.map((t, idx) => `
+                <div class="bg-white px-3 py-1.5 rounded-xl border border-purple-100 text-xs font-medium text-gray-700 shadow-sm flex items-center space-x-2">
+                    <span class="bg-purple-600 text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold">${idx+1}</span>
+                    <span>${t.name}</span>
+                </div>
+            `).join('');
+
+            teamsSection.innerHTML = `
+                <h4 class="heading-font text-xs font-bold text-purple-700 mb-2 flex items-center">
+                    <i class="fa-solid fa-users-rectangle mr-1.5"></i> รายชื่อคู่ถาวรที่สุ่มได้ (${matchData.teams.length} คู่)
+                </h4>
+                <div class="flex flex-wrap gap-2">
+                    ${teamChips}
+                </div>
+            `;
+            container.appendChild(teamsSection);
+
+            // Display Active Court Matches
+            const matchesGrid = document.createElement('div');
+            matchesGrid.className = "grid grid-cols-1 md:grid-cols-2 gap-4";
+
+            matchData.matches.forEach((match, index) => {
+                const matchCard = document.createElement('div');
+                matchCard.className = `border rounded-2xl p-4 transition shadow-sm ${match.status === 'finished' ? 'bg-gray-100 border-gray-200 opacity-70' : 'bg-white border-purple-100 hover:border-purple-300'}`;
+
+                matchCard.innerHTML = `
+                    <div class="flex justify-between items-center mb-3 pb-2 border-b border-gray-100">
+                        <span class="heading-font text-xs font-bold text-purple-600 bg-purple-50 px-2.5 py-1 rounded-lg">
+                            <i class="fa-solid fa-trophy text-yellow-500 mr-1"></i> แมตช์สนามที่ ${match.courtNum}
+                        </span>
+                        <span class="text-[10px] text-gray-400">ชนะครบ 2 ครั้ง สลับให้คู่อื่นขึ้น</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 items-center text-center relative">
+                        <!-- Team A -->
+                        <div class="bg-peach-50/50 p-3 rounded-xl border border-peach-100">
+                            <div class="text-xs font-bold text-peach-500 mb-1">ทีม A</div>
+                            <div class="text-xs text-gray-700 font-medium">${match.teamA.p1} & ${match.teamA.p2}</div>
+                            
+                            <!-- Win Checkboxes -->
+                            <div class="mt-2 flex justify-center items-center space-x-1">
+                                <span class="text-[10px] text-gray-400 mr-1">ชนะ:</span>
+                                <input type="checkbox" ${match.teamA.wins >= 1 ? 'checked' : ''} onchange="toggleWin('${date}', '${slot}', ${index}, 'A', 1)" class="w-4 h-4 text-peach-500 rounded focus:ring-peach-300">
+                                <input type="checkbox" ${match.teamA.wins >= 2 ? 'checked' : ''} onchange="toggleWin('${date}', '${slot}', ${index}, 'A', 2)" class="w-4 h-4 text-peach-500 rounded focus:ring-peach-300">
+                            </div>
+                        </div>
+
+                        <!-- VS Badge -->
+                        <div class="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-6 h-6 bg-purple-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow">
+                            VS
+                        </div>
+
+                        <!-- Team B -->
+                        <div class="bg-mint-100/40 p-3 rounded-xl border border-mint-300/40">
+                            <div class="text-xs font-bold text-mint-500 mb-1">ทีม B</div>
+                            <div class="text-xs text-gray-700 font-medium">${match.teamB.p1} & ${match.teamB.p2}</div>
+
+                            <!-- Win Checkboxes -->
+                            <div class="mt-2 flex justify-center items-center space-x-1">
+                                <span class="text-[10px] text-gray-400 mr-1">ชนะ:</span>
+                                <input type="checkbox" ${match.teamB.wins >= 1 ? 'checked' : ''} onchange="toggleWin('${date}', '${slot}', ${index}, 'B', 1)" class="w-4 h-4 text-mint-500 rounded focus:ring-mint-300">
+                                <input type="checkbox" ${match.teamB.wins >= 2 ? 'checked' : ''} onchange="toggleWin('${date}', '${slot}', ${index}, 'B', 2)" class="w-4 h-4 text-mint-500 rounded focus:ring-mint-300">
+                            </div>
+                        </div>
+                    </div>
+
+                    ${(match.teamA.wins >= 2 || match.teamB.wins >= 2) ? `
+                        <div class="mt-3 bg-yellow-100 text-yellow-800 text-[11px] p-2 rounded-xl text-center font-medium">
+                            🎉 ${(match.teamA.wins >= 2 ? match.teamA.name : match.teamB.name)} ชนะครบ 2 ครั้งแล้ว! (สลับเปลี่ยนคู่แข่งขัน)
+                        </div>
+                    ` : ''}
+                `;
+
+                matchesGrid.appendChild(matchCard);
+            });
+
+            container.appendChild(matchesGrid);
+        }
+
+        function toggleWin(date, slot, matchIdx, teamKey, winNum) {
+            const matchData = appData.matches[date][slot];
+            const match = matchData.matches[matchIdx];
+            const targetTeam = teamKey === 'A' ? match.teamA : match.teamB;
+
+            if (targetTeam.wins === winNum) {
+                targetTeam.wins = winNum - 1;
+            } else {
+                targetTeam.wins = winNum;
+            }
+
+            if (match.teamA.wins >= 2 || match.teamB.wins >= 2) {
+                match.status = 'finished';
+                showToast(`คู่นี้ชนะครบ 2 ครั้งแล้ว! ให้สลับทีมอื่นขึ้นแทนครับ`);
+            } else {
+                match.status = 'playing';
+            }
+
+            saveData();
+            renderMatches();
+        }
+    </script>
+</body>
+</html>
