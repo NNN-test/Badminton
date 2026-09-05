@@ -41,6 +41,14 @@
         .heading-font {
             font-family: 'Mitr', sans-serif;
         }
+        /* Day colors for calendar */
+        .day-mon { background-color: #FEF08A; border-color: #FDE047; color: #854D0E; } /* Mon - Yellow */
+        .day-tue { background-color: #FCE7F3; border-color: #FBCFE8; color: #9D174D; } /* Tue - Pink */
+        .day-wed { background-color: #DCFCE7; border-color: #BBF7D0; color: #166534; } /* Wed - Green */
+        .day-thu { background-color: #FFEDD5; border-color: #FED7AA; color: #9A3412; } /* Thu - Orange */
+        .day-fri { background-color: #E0F2FE; border-color: #BAE6FD; color: #075985; } /* Fri - Blue */
+        .day-sat { background-color: #F3E8FF; border-color: #E9D5FF; color: #6B21A8; } /* Sat - Purple */
+        .day-sun { background-color: #FEE2E2; border-color: #FECACA; color: #991B1B; } /* Sun - Red */
     </style>
 </head>
 <body class="text-gray-700 min-h-screen pb-12">
@@ -110,15 +118,28 @@
                             <input type="date" id="user-date" required onchange="renderUserView()" class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-peach-300">
                         </div>
 
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1">เลือกช่วงเวลา (1 ชม.)</label>
-                            <select id="user-time-slot" required class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-peach-300">
-                                <option value="17:00-18:00">17:00 - 18:00 น.</option>
-                                <option value="18:00-19:00" selected>18:00 - 19:00 น.</option>
-                                <option value="19:00-20:00">19:00 - 20:00 น.</option>
-                                <option value="20:00-21:00">20:00 - 21:00 น.</option>
-                                <option value="21:00-22:00">21:00 - 22:00 น.</option>
-                            </select>
+                        <!-- Multi-Hour Range Selection -->
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1">เวลาเริ่มต้น</label>
+                                <select id="user-start-time" class="w-full px-2 py-2 border border-gray-200 rounded-xl text-xs focus:ring-2 focus:ring-peach-300">
+                                    <option value="17:00">17:00 น.</option>
+                                    <option value="18:00" selected>18:00 น.</option>
+                                    <option value="19:00">19:00 น.</option>
+                                    <option value="20:00">20:00 น.</option>
+                                    <option value="21:00">21:00 น.</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1">เวลาสิ้นสุด</label>
+                                <select id="user-end-time" class="w-full px-2 py-2 border border-gray-200 rounded-xl text-xs focus:ring-2 focus:ring-peach-300">
+                                    <option value="18:00">18:00 น.</option>
+                                    <option value="19:00">19:00 น.</option>
+                                    <option value="20:00" selected>20:00 น.</option>
+                                    <option value="21:00">21:00 น.</option>
+                                    <option value="22:00">22:00 น.</option>
+                                </select>
+                            </div>
                         </div>
 
                         <!-- Choose Existing Member Database or New Input -->
@@ -146,8 +167,8 @@
                 </div>
 
                 <!-- Live Participants List -->
-                <div class="md:col-span-2 bg-white rounded-3xl p-6 shadow-sm border border-purple-50">
-                    <div class="flex justify-between items-center mb-4">
+                <div class="md:col-span-2 bg-white rounded-3xl p-6 shadow-sm border border-purple-50 space-y-6">
+                    <div class="flex justify-between items-center border-b border-gray-100 pb-3">
                         <h3 class="heading-font text-lg font-semibold text-gray-800 flex items-center">
                             <i class="fa-solid fa-users text-mint-500 mr-2"></i> รายชื่อผู้ลงชื่อในวันที่เลือก
                         </h3>
@@ -159,6 +180,24 @@
                     <!-- Slots Container -->
                     <div id="user-slots-container" class="space-y-4">
                         <!-- Dynamic content by JS -->
+                    </div>
+
+                    <!-- User View: Payment Info Banner -->
+                    <div id="user-payment-banner" class="hidden bg-gradient-to-r from-mint-100 via-purple-50 to-peach-100 rounded-2xl p-4 border border-mint-300 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h4 class="heading-font text-sm font-bold text-gray-800 flex items-center">
+                                <i class="fa-solid fa-receipt text-mint-500 mr-2"></i> สรุปบิลและช่องทางชำระเงินของวันนี้
+                            </h4>
+                            <span class="text-xs text-mint-700 font-semibold bg-white px-2.5 py-0.5 rounded-full shadow-sm">
+                                บิลออกแล้ว
+                            </span>
+                        </div>
+                        <div id="user-bank-details" class="text-xs text-gray-700 bg-white/80 p-3 rounded-xl border border-gray-200 space-y-2">
+                            <!-- Bank info list inserted by JS -->
+                        </div>
+                        <div id="user-my-bill" class="text-xs font-medium text-gray-700">
+                            <!-- User's bill list -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -176,7 +215,7 @@
                     <h2 class="heading-font text-xl font-bold text-gray-800 flex items-center">
                         <i class="fa-solid fa-sliders text-purple-500 mr-2"></i> แผงควบคุมแอดมิน (Admin Dashboard)
                     </h2>
-                    <p class="text-xs text-gray-500">จัดการราคา สรุปค่าใช้จ่าย จัดการสมาชิก และสุ่มจัดคอร์ด</p>
+                    <p class="text-xs text-gray-500">จัดการราคา สรุปค่าใช้จ่าย บิลชำระเงิน จัดการสมาชิก และสุ่มจัดคอร์ด</p>
                 </div>
 
                 <!-- Admin Date Selector -->
@@ -207,7 +246,7 @@
                         <input type="number" id="cfg-shuttle-price" value="30" class="w-full mt-1 px-3 py-1.5 border border-gray-200 rounded-xl text-sm">
                     </div>
                     <div>
-                        <label class="text-xs text-gray-500">จำนวนคนต่อ 1 สนาม (เพื่อคำนวณการเพิ่มสนาม)</label>
+                        <label class="text-xs text-gray-500">จำนวนคนต่อ 1 สนาม (คำนวณการจัดเพิ่ม)</label>
                         <input type="number" id="cfg-people-per-court" value="4" min="1" class="w-full mt-1 px-3 py-1.5 border border-gray-200 rounded-xl text-sm">
                     </div>
                 </div>
@@ -216,19 +255,19 @@
                 <div class="md:col-span-2 bg-gradient-to-br from-purple-50 to-peach-50 rounded-3xl p-5 shadow-sm border border-purple-100 flex flex-col justify-between">
                     <div>
                         <h4 class="heading-font text-sm font-semibold text-gray-700 mb-2 flex items-center">
-                            <i class="fa-solid fa-chart-pie text-purple-600 mr-2"></i> สรุปยอดการจองรวมของวัน
+                            <i class="fa-solid fa-chart-pie text-purple-600 mr-2"></i> สรุปยอดการจองรวมของวัน (คิดตามสนามและชั่วโมงจริง)
                         </h4>
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center mt-3">
                             <div class="bg-white p-3 rounded-2xl border border-purple-100">
-                                <span class="text-xs text-gray-400 block">ผู้เข้าร่วมรวม</span>
+                                <span class="text-xs text-gray-400 block">ผู้เข้าร่วมจริง</span>
                                 <span id="sum-total-people" class="text-xl font-bold text-purple-600">0</span> <span class="text-xs">คน</span>
                             </div>
                             <div class="bg-white p-3 rounded-2xl border border-purple-100">
-                                <span class="text-xs text-gray-400 block">ชั่วโมงรวม</span>
+                                <span class="text-xs text-gray-400 block">ชั่วโมงคอร์ดรวม</span>
                                 <span id="sum-total-hours" class="text-xl font-bold text-peach-500">0</span> <span class="text-xs">ชม.</span>
                             </div>
                             <div class="bg-white p-3 rounded-2xl border border-purple-100">
-                                <span class="text-xs text-gray-400 block">ต้องจองรวม</span>
+                                <span class="text-xs text-gray-400 block">สนามจริงที่ใช้</span>
                                 <span id="sum-total-courts" class="text-xl font-bold text-mint-500">0</span> <span class="text-xs">สนาม</span>
                             </div>
                             <div class="bg-white p-3 rounded-2xl border border-purple-100">
@@ -237,42 +276,95 @@
                             </div>
                         </div>
                         <div class="mt-4 bg-white/70 backdrop-blur-sm p-3 rounded-2xl border border-purple-100 flex justify-between items-center">
-                            <span class="text-xs text-gray-600 font-medium">รวมประมาณการค่าใช้จ่ายทั้งหมด (ค่าสนาม + ค่าลูกแบด):</span>
+                            <span class="text-xs text-gray-600 font-medium">รวมประมาณการค่าใช้จ่ายทั้งหมด (ค่าสนามชั่วโมงรวม + ค่าลูกแบด):</span>
                             <span class="text-lg font-bold text-gray-800"><span id="sum-total-price">0</span> บาท</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- MEMBER DATABASE MANAGEMENT & HISTORY LOG -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Preset Member Database -->
-                <div class="bg-white rounded-3xl p-6 shadow-sm border border-purple-50 space-y-4">
-                    <div class="flex justify-between items-center border-b border-gray-100 pb-3">
-                        <h3 class="heading-font text-base font-semibold text-gray-800 flex items-center">
-                            <i class="fa-solid fa-address-book text-peach-500 mr-2"></i> จัดการฐานข้อมูลสมาชิกประจำ
+            <!-- WEEKLY COLOR CALENDAR & HISTORY SECTION -->
+            <div class="bg-white rounded-3xl p-6 shadow-sm border border-purple-50 space-y-4">
+                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-gray-100 pb-3">
+                    <div>
+                        <h3 class="heading-font text-lg font-semibold text-gray-800 flex items-center">
+                            <i class="fa-solid fa-calendar-days text-peach-500 mr-2"></i> ปฏิทินประวัติการลงเล่น (สีประจำวัน จ.-อา.)
                         </h3>
-                        <button onclick="openAddPresetMemberModal()" class="text-xs bg-peach-500 hover:bg-peach-600 text-white px-3 py-1.5 rounded-xl font-medium shadow-sm transition">
-                            <i class="fa-solid fa-user-plus mr-1"></i> เพิ่มสมาชิก
-                        </button>
+                        <p class="text-xs text-gray-500">นับจำนวนผู้เล่นจริงแบบไม่ซ้ำคน สามารถคลิกเลือกวันที่ย้อนหลังได้เลย</p>
                     </div>
-
-                    <div id="preset-members-list" class="space-y-2 max-h-48 overflow-y-auto pr-1">
-                        <!-- Dynamic preset list -->
+                    <div class="flex items-center space-x-2">
+                        <button onclick="changeCalendarMonth(-1)" class="p-1.5 bg-gray-100 hover:bg-gray-200 rounded-xl text-xs text-gray-600">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <span id="calendar-month-label" class="text-xs font-bold text-purple-700 min-w-28 text-center">
+                            มีนาคม 2026
+                        </span>
+                        <button onclick="changeCalendarMonth(1)" class="p-1.5 bg-gray-100 hover:bg-gray-200 rounded-xl text-xs text-gray-600">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
                     </div>
                 </div>
 
-                <!-- History Log Section -->
-                <div class="bg-white rounded-3xl p-6 shadow-sm border border-purple-50 space-y-4">
-                    <div class="flex justify-between items-center border-b border-gray-100 pb-3">
-                        <h3 class="heading-font text-base font-semibold text-gray-800 flex items-center">
-                            <i class="fa-solid fa-clock-rotate-left text-mint-500 mr-2"></i> ประวัติการจองย้อนหลัง
-                        </h3>
-                    </div>
+                <!-- Calendar Grid Container -->
+                <div id="calendar-grid-container">
+                    <!-- Dynamic Grid generated by JS -->
+                </div>
+            </div>
 
-                    <div id="history-log-list" class="space-y-2 max-h-48 overflow-y-auto pr-1">
-                        <!-- Dynamic history logs -->
+            <!-- DAILY BILL SETTLEMENT & MULTI-BANK ACCOUNTS -->
+            <div class="bg-white rounded-3xl p-6 shadow-sm border border-purple-50 space-y-4">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 border-b border-gray-100 pb-3">
+                    <div>
+                        <h3 class="heading-font text-lg font-semibold text-gray-800 flex items-center">
+                            <i class="fa-solid fa-file-invoice-dollar text-mint-500 mr-2"></i> สรุปคิดบิลวันนี้ & เช็คลิสต์การโอนเงิน
+                        </h3>
+                        <p class="text-xs text-gray-500">คำนวณบิลหารตามชั่วโมงจริง สามารถแก้ไขยอดเงินตามจริงได้ และกดบันทึกตัดออกจากหน้างาน</p>
                     </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="calculateDailyBill()" class="bg-mint-500 hover:bg-mint-600 text-white text-xs font-semibold px-3 py-2 rounded-xl transition shadow-sm">
+                            <i class="fa-solid fa-calculator mr-1"></i> คำนวณบิลวันนี้
+                        </button>
+                        <button onclick="saveClearedPayments()" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold px-3 py-2 rounded-xl transition shadow-sm">
+                            <i class="fa-solid fa-floppy-disk mr-1"></i> บันทึกการชำระเงิน
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Multi-Bank Accounts Management Container -->
+                <div class="bg-purple-50/50 p-4 rounded-2xl border border-purple-100 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-purple-700">
+                            <i class="fa-solid fa-building-columns mr-1"></i> บัญชีธนาคารผู้รับเงิน (เพิ่มได้หลายบัญชี)
+                        </span>
+                        <button onclick="openAddBankModal()" class="text-xs bg-white text-purple-600 border border-purple-200 hover:bg-purple-100 px-2.5 py-1 rounded-lg font-medium transition">
+                            <i class="fa-solid fa-plus mr-1"></i> เพิ่มบัญชี
+                        </button>
+                    </div>
+                    
+                    <div id="bank-accounts-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                        <!-- Dynamic Bank List -->
+                    </div>
+                </div>
+
+                <!-- Member Payment Checklist Table -->
+                <div id="bill-checklist-container" class="space-y-2">
+                    <p class="text-xs text-gray-400 italic text-center py-4">กดปุ่ม "คำนวณบิลวันนี้" เพื่อเริ่มจัดสรุปยอดชำระเงิน</p>
+                </div>
+            </div>
+
+            <!-- MEMBER DATABASE MANAGEMENT -->
+            <div class="bg-white rounded-3xl p-6 shadow-sm border border-purple-50 space-y-4">
+                <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+                    <h3 class="heading-font text-base font-semibold text-gray-800 flex items-center">
+                        <i class="fa-solid fa-address-book text-peach-500 mr-2"></i> จัดการฐานข้อมูลสมาชิกประจำ
+                    </h3>
+                    <button onclick="openAddPresetMemberModal()" class="text-xs bg-peach-500 hover:bg-peach-600 text-white px-3 py-1.5 rounded-xl font-medium shadow-sm transition">
+                        <i class="fa-solid fa-user-plus mr-1"></i> เพิ่มสมาชิก
+                    </button>
+                </div>
+
+                <div id="preset-members-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto pr-1">
+                    <!-- Dynamic preset list -->
                 </div>
             </div>
 
@@ -408,6 +500,42 @@
         </div>
     </div>
 
+    <!-- Modal Form for Multi-Bank Accounts -->
+    <div id="modal-bank-account" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl space-y-4 m-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 id="bank-modal-title" class="heading-font text-lg font-bold text-gray-800">
+                    <i class="fa-solid fa-building-columns text-purple-600 mr-2"></i> เพิ่มบัญชีรับเงิน
+                </h3>
+                <button onclick="closeModal('modal-bank-account')" class="text-gray-400 hover:text-gray-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <input type="hidden" id="bank-acc-id">
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">ชื่อธนาคาร / ช่องทาง</label>
+                <input type="text" id="bank-acc-provider" class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-purple-300" placeholder="เช่น ธนาคารกสิกรไทย / พร้อมเพย์">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">เลขที่บัญชี / เบอร์พร้อมเพย์</label>
+                <input type="text" id="bank-acc-number" class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-purple-300" placeholder="เช่น 012-3-45678-9">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">ชื่อบัญชีผู้รับเงิน</label>
+                <input type="text" id="bank-acc-holder" class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-purple-300" placeholder="เช่น นายแอดมิน ก๊วนแบด">
+            </div>
+
+            <div class="flex justify-end space-x-2 pt-2">
+                <button onclick="closeModal('modal-bank-account')" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-xl text-xs text-gray-600 font-medium">ยกเลิก</button>
+                <button onclick="saveBankAccountInfo()" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-xl text-xs text-white font-medium">บันทึกบัญชี</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MOTIVATIONAL POPUP MODAL -->
     <div id="modal-motivation" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
         <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl text-center space-y-4 m-4 border-2 border-peach-300 transform transition-all animate-bounce-once">
@@ -435,21 +563,23 @@
     <!-- Script Logic -->
     <script>
         // Data Structure Storage
-        let appData = JSON.parse(localStorage.getItem('badminton_app_data_v4')) || {
+        let appData = JSON.parse(localStorage.getItem('badminton_app_data_v7')) || {
             config: {
                 pricePerHour: 200,
                 shuttlePrice: 30,
                 peoplePerCourt: 4
             },
-            // Preset Registered Members Database: [{ id, name, contact }]
+            bankAccounts: [
+                { id: 'b1', provider: 'กสิกรไทย', number: '012-3-45678-9', holder: 'แอดมิน ก๊วนแบด' },
+                { id: 'b2', provider: 'พร้อมเพย์', number: '081-234-5678', holder: 'แอดมิน ก๊วนแบด' }
+            ],
             presetMembers: [
                 { id: 'p1', name: 'น้องก๊วน', contact: 'Line: badm_party' },
                 { id: 'p2', name: 'พี่ตบหนัก', contact: '081-234-5678' }
             ],
-            // Format: { "YYYY-MM-DD": { "18:00-19:00": { members: [{id, name, contact, courtId}], courts: [{id, name}], shuttlesUsed: 0, note: "" } } }
             bookings: {},
-            // Format: { "YYYY-MM-DD": { "18:00-19:00": { teams: [], matches: [] } } }
-            matches: {}
+            matches: {},
+            bills: {}
         };
 
         const TIME_SLOTS = [
@@ -460,7 +590,6 @@
             "21:00-22:00"
         ];
 
-        // Random Motivational Quotes
         const MOTIVATION_QUOTES = [
             "พร้อมลุยแล้ว! วันนี้ตบลูกแบดให้สุดเหงื่อกันไปเลย 🏸✨",
             "ซ้อมบ่อยๆ รับรองว่าเก่งขึ้นแน่นอน! ไปวอร์มรอได้เลย 💪🔥",
@@ -471,6 +600,7 @@
         ];
 
         let currentRole = 'user';
+        let currentCalDate = new Date();
 
         // Initialize App
         window.onload = function() {
@@ -478,18 +608,18 @@
             document.getElementById('user-date').value = today;
             document.getElementById('admin-date').value = today;
 
-            // Load saved config to UI
             document.getElementById('cfg-price-per-hour').value = appData.config.pricePerHour || 200;
             document.getElementById('cfg-shuttle-price').value = appData.config.shuttlePrice || 30;
             document.getElementById('cfg-people-per-court').value = appData.config.peoplePerCourt || 4;
 
             renderPresetMembersOptions();
+            renderBankAccountsList();
             renderUserView();
             renderAdminView();
         };
 
         function saveData() {
-            localStorage.setItem('badminton_app_data_v4', JSON.stringify(appData));
+            localStorage.setItem('badminton_app_data_v7', JSON.stringify(appData));
         }
 
         function switchRole(role) {
@@ -545,6 +675,101 @@
             return appData.bookings[date][slot];
         }
 
+        // ================= BANK ACCOUNTS MANAGEMENT =================
+        function renderBankAccountsList() {
+            const container = document.getElementById('bank-accounts-list');
+            if (!container) return;
+
+            if (!appData.bankAccounts || appData.bankAccounts.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-400 italic col-span-full">ยังไม่ได้เพิ่มบัญชีรับเงิน</p>`;
+                return;
+            }
+
+            container.innerHTML = appData.bankAccounts.map(b => `
+                <div class="flex items-center justify-between bg-white px-3 py-2 rounded-xl border border-purple-100 text-xs shadow-sm">
+                    <div>
+                        <span class="font-bold text-purple-700">${b.provider}:</span>
+                        <span class="font-semibold text-gray-800 ml-1">${b.number}</span>
+                        <span class="text-[10px] text-gray-400 block">${b.holder}</span>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <button onclick="openEditBankModal('${b.id}')" class="text-blue-400 hover:text-blue-600 p-1">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button onclick="deleteBankAccount('${b.id}')" class="text-red-400 hover:text-red-600 p-1">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openAddBankModal() {
+            document.getElementById('bank-acc-id').value = '';
+            document.getElementById('bank-acc-provider').value = '';
+            document.getElementById('bank-acc-number').value = '';
+            document.getElementById('bank-acc-holder').value = '';
+            document.getElementById('bank-modal-title').innerText = 'เพิ่มบัญชีรับเงิน';
+            document.getElementById('modal-bank-account').classList.remove('hidden');
+        }
+
+        function openEditBankModal(id) {
+            const b = appData.bankAccounts.find(x => x.id === id);
+            if (!b) return;
+
+            document.getElementById('bank-acc-id').value = b.id;
+            document.getElementById('bank-acc-provider').value = b.provider;
+            document.getElementById('bank-acc-number').value = b.number;
+            document.getElementById('bank-acc-holder').value = b.holder;
+            document.getElementById('bank-modal-title').innerText = 'แก้ไขบัญชีรับเงิน';
+            document.getElementById('modal-bank-account').classList.remove('hidden');
+        }
+
+        function saveBankAccountInfo() {
+            const id = document.getElementById('bank-acc-id').value;
+            const provider = document.getElementById('bank-acc-provider').value.trim();
+            const number = document.getElementById('bank-acc-number').value.trim();
+            const holder = document.getElementById('bank-acc-holder').value.trim();
+
+            if (!provider || !number || !holder) {
+                showToast('กรุณากรอกข้อมูลบัญชีให้ครบถ้วน', true);
+                return;
+            }
+
+            if (!appData.bankAccounts) appData.bankAccounts = [];
+
+            if (id) {
+                const b = appData.bankAccounts.find(x => x.id === id);
+                if (b) {
+                    b.provider = provider;
+                    b.number = number;
+                    b.holder = holder;
+                }
+            } else {
+                appData.bankAccounts.push({
+                    id: 'bank_' + Date.now(),
+                    provider: provider,
+                    number: number,
+                    holder: holder
+                });
+            }
+
+            saveData();
+            closeModal('modal-bank-account');
+            renderBankAccountsList();
+            renderUserView();
+            showToast('บันทึกบัญชีรับเงินเรียบร้อยแล้ว');
+        }
+
+        function deleteBankAccount(id) {
+            if (!confirm('ยืนยันลบบัญชีรับเงินนี้?')) return;
+            appData.bankAccounts = appData.bankAccounts.filter(x => x.id !== id);
+            saveData();
+            renderBankAccountsList();
+            renderUserView();
+            showToast('ลบบัญชีเรียบร้อยแล้ว');
+        }
+
         // ================= PRESET MEMBER DATABASE LOGIC =================
         function renderPresetMembersOptions() {
             const select = document.getElementById('user-select-preset');
@@ -557,7 +782,6 @@
                 select.appendChild(opt);
             });
 
-            // Also update preset list in Admin panel
             renderPresetMembersAdminList();
         }
 
@@ -577,7 +801,7 @@
             if (!container) return;
 
             if (appData.presetMembers.length === 0) {
-                container.innerHTML = `<p class="text-xs text-gray-400 italic">ยังไม่มีสมาชิกประจำในระบบ</p>`;
+                container.innerHTML = `<p class="text-xs text-gray-400 italic col-span-full">ยังไม่มีสมาชิกประจำในระบบ</p>`;
                 return;
             }
 
@@ -660,31 +884,49 @@
         function handleUserSubmit(e) {
             e.preventDefault();
             const date = document.getElementById('user-date').value;
-            const timeSlot = document.getElementById('user-time-slot').value;
+            const startTimeStr = document.getElementById('user-start-time').value;
+            const endTimeStr = document.getElementById('user-end-time').value;
             const name = document.getElementById('user-name').value.trim();
             const contact = document.getElementById('user-contact').value.trim();
 
+            const startHour = parseInt(startTimeStr.split(':')[0]);
+            const endHour = parseInt(endTimeStr.split(':')[0]);
+
             if (!date || !name || !contact) return;
 
-            const slotData = getSlotData(date, timeSlot);
-
-            // Check duplicate name in slot
-            const isDuplicate = slotData.members.some(p => p.name === name);
-            if (isDuplicate) {
-                showToast("ชื่อนี้ได้ลงสมัครในรอบเวลานี้แล้วครับ", true);
+            if (startHour >= endHour) {
+                showToast("เวลาเริ่มต้นต้องน้อยกว่าเวลาสิ้นสุดครับ", true);
                 return;
             }
 
-            slotData.members.push({
-                id: Date.now().toString(),
-                name: name,
-                contact: contact,
-                courtId: slotData.courts[0] ? slotData.courts[0].id : 'c1'
+            const targetSlots = [];
+            for (let h = startHour; h < endHour; h++) {
+                const slotKey = `${String(h).padStart(2, '0')}:00-${String(h+1).padStart(2, '0')}:00`;
+                if (TIME_SLOTS.includes(slotKey)) {
+                    targetSlots.push(slotKey);
+                }
+            }
+
+            if (targetSlots.length === 0) {
+                showToast("ไม่อยู่ในช่วงเวลาเปิดก๊วนครับ", true);
+                return;
+            }
+
+            targetSlots.forEach(timeSlot => {
+                const slotData = getSlotData(date, timeSlot);
+                const isDuplicate = slotData.members.some(p => p.name === name);
+                if (!isDuplicate) {
+                    slotData.members.push({
+                        id: Date.now().toString() + '_' + Math.random().toString(36).substring(2, 5),
+                        name: name,
+                        contact: contact,
+                        courtId: slotData.courts[0] ? slotData.courts[0].id : 'c1'
+                    });
+                }
             });
 
             saveData();
             
-            // Show Random Motivational Pop-up
             const randomQuote = MOTIVATION_QUOTES[Math.floor(Math.random() * MOTIVATION_QUOTES.length)];
             document.getElementById('motivation-text').innerText = randomQuote;
             document.getElementById('modal-motivation').classList.remove('hidden');
@@ -754,6 +996,43 @@
                 `;
                 container.appendChild(slotEl);
             });
+
+            // Render User View Bill Banner
+            const userPaymentBanner = document.getElementById('user-payment-banner');
+            const userBankDetails = document.getElementById('user-bank-details');
+            const userMyBill = document.getElementById('user-my-bill');
+
+            if (appData.bills && appData.bills[date] && appData.bills[date].items.length > 0) {
+                userPaymentBanner.classList.remove('hidden');
+                
+                const banks = appData.bankAccounts || [];
+                let bankHTML = banks.map(b => `
+                    <div class="border-b border-gray-100 pb-1 last:border-0">
+                        <strong>${b.provider}:</strong> <span class="font-bold text-purple-700">${b.number}</span>
+                        <span class="text-gray-500 ml-1">(${b.holder})</span>
+                    </div>
+                `).join('');
+
+                if (banks.length === 0) bankHTML = `<span class="text-gray-400">ยังไม่ได้ระบุบัญชีรับเงิน</span>`;
+
+                userBankDetails.innerHTML = bankHTML;
+
+                userMyBill.innerHTML = `
+                    <div class="font-bold text-gray-800 mb-1">ยอดค่าใช้จ่ายวันนี้แบ่งตามรายคน:</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-1">
+                        ${appData.bills[date].items.map(b => `
+                            <div class="flex justify-between items-center bg-white px-2.5 py-1.5 rounded-lg border border-gray-100">
+                                <span>${b.name} (${b.slotsCount} ชม.)</span>
+                                <span class="font-bold ${b.paid ? 'text-green-600' : 'text-peach-500'}">
+                                    ${b.totalCost} ฿ ${b.paid ? '✓ (โอนแล้ว)' : ''}
+                                </span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } else {
+                userPaymentBanner.classList.add('hidden');
+            }
         }
 
         // ================= ADMIN VIEW LOGIC =================
@@ -771,9 +1050,9 @@
             const container = document.getElementById('admin-time-slots-container');
             container.innerHTML = '';
 
-            let totalPeople = 0;
-            let totalHoursWithPeople = 0;
-            let totalCourtsNeeded = 0;
+            const uniquePeopleSet = new Set();
+            let totalCourtHoursSum = 0; // Cumulative court-hours
+            const uniqueCourtsSet = new Set();
             let totalShuttles = 0;
             let totalCourtCostSum = 0;
             let totalShuttleCostSum = 0;
@@ -787,34 +1066,33 @@
                 const list = slotData.members;
                 const count = list.length;
                 const courts = slotData.courts || [{ id: 'c1', name: 'สนาม 1' }];
-                const courtsNeeded = courts.length;
                 const shuttlesUsed = slotData.shuttlesUsed || 0;
 
-                const courtCost = courtsNeeded * appData.config.pricePerHour;
+                list.forEach(m => uniquePeopleSet.add(m.name));
+                courts.forEach(c => uniqueCourtsSet.add(c.name));
+
+                // 1 Slot = 1 Hour. Courts in this slot = court-hours
+                const slotCourtHours = courts.length * 1; 
+                const courtCost = slotCourtHours * appData.config.pricePerHour;
                 const shuttleCost = shuttlesUsed * appData.config.shuttlePrice;
                 const totalSlotCost = courtCost + shuttleCost;
                 const perPersonAvg = count > 0 ? (totalSlotCost / count).toFixed(1) : 0;
 
                 if (count > 0) {
-                    totalPeople += count;
-                    totalHoursWithPeople += 1;
-                    totalCourtsNeeded += courtsNeeded;
+                    totalCourtHoursSum += slotCourtHours;
                     totalShuttles += shuttlesUsed;
                     totalCourtCostSum += courtCost;
                     totalShuttleCostSum += shuttleCost;
                 }
 
-                // Append Option to Match Select
                 const opt = document.createElement('option');
                 opt.value = slot;
                 opt.innerText = `รอบ ${slot} (${count} คน)`;
                 matchSlotSelect.appendChild(opt);
 
-                // Build Slot Item Card in Admin
                 const slotDiv = document.createElement('div');
                 slotDiv.className = "bg-gray-50 rounded-2xl p-4 border border-gray-100 space-y-4";
 
-                // Build Courts & Members in Admin
                 let courtsAdminHTML = courts.map(c => {
                     const courtMembers = list.filter(m => m.courtId === c.id || (!m.courtId && c.id === 'c1'));
 
@@ -874,7 +1152,7 @@
                                 <i class="fa-solid fa-plus mr-1"></i> เพิ่มสนามในรอบนี้
                             </button>
                             <span class="bg-blue-50 text-blue-600 px-2.5 py-1 rounded-lg border border-blue-100">
-                                จอง: <strong>${courtsNeeded}</strong> สนาม
+                                เปิด: <strong>${courts.length}</strong> สนาม
                             </span>
                             <span class="bg-green-50 text-green-600 px-2.5 py-1 rounded-lg border border-green-100">
                                 รวมค่าใช้จ่าย: <strong>${totalSlotCost}</strong> ฿
@@ -885,7 +1163,6 @@
                         </div>
                     </div>
 
-                    <!-- Shuttle Cock Counter & Note Edit Row -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-white p-3 rounded-xl border border-gray-100">
                         <div class="flex items-center space-x-2">
                             <label class="text-xs font-semibold text-gray-600 whitespace-nowrap">ลูกแบดที่ใช้:</label>
@@ -901,7 +1178,6 @@
                         </div>
                     </div>
 
-                    <!-- Courts and Member grid -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                         ${courtsAdminHTML}
                     </div>
@@ -914,17 +1190,18 @@
                 matchSlotSelect.value = selectedSlotBefore;
             }
 
-            // Update Summary Stats
-            document.getElementById('sum-total-people').innerText = totalPeople;
-            document.getElementById('sum-total-hours').innerText = totalHoursWithPeople;
-            document.getElementById('sum-total-courts').innerText = totalCourtsNeeded;
+            // Update Summary Stats (Distinct Members & Physical Courts & Total Court-Hours)
+            document.getElementById('sum-total-people').innerText = uniquePeopleSet.size;
+            document.getElementById('sum-total-hours').innerText = totalCourtHoursSum;
+            document.getElementById('sum-total-courts').innerText = uniqueCourtsSet.size;
             document.getElementById('sum-total-shuttles').innerText = totalShuttles;
             const overallPrice = totalCourtCostSum + totalShuttleCostSum;
             document.getElementById('sum-total-price').innerText = overallPrice.toLocaleString();
 
             populateMemberDropdown();
             renderMemberDashboard();
-            renderHistoryLog();
+            renderWeeklyCalendar();
+            renderBillChecklist();
             renderMatches();
         }
 
@@ -951,7 +1228,6 @@
             }
 
             slotData.courts = slotData.courts.filter(c => c.id !== courtId);
-            // Move members of removed court to court 1
             const defaultCourtId = slotData.courts[0].id;
             slotData.members.forEach(m => {
                 if (m.courtId === courtId) m.courtId = defaultCourtId;
@@ -1026,58 +1302,257 @@
             showToast("ลบรายชื่อเรียบร้อยแล้ว");
         }
 
-        // ================= HISTORY LOG & BACKUP LOGIC =================
-        function renderHistoryLog() {
-            const container = document.getElementById('history-log-list');
-            if (!container) return;
-
-            const dates = Object.keys(appData.bookings).sort().reverse();
-            if (dates.length === 0) {
-                container.innerHTML = `<p class="text-xs text-gray-400 italic">ยังไม่มีประวัติการจองในระบบ</p>`;
+        // ================= DAILY BILL SETTLEMENT LOGIC =================
+        function calculateDailyBill() {
+            const date = document.getElementById('admin-date').value;
+            if (!appData.bookings[date]) {
+                showToast('ไม่มีข้อมูลการจองในวันนี้ครับ', true);
                 return;
             }
 
-            container.innerHTML = dates.map(date => {
-                let dayPeople = 0;
-                let dayCourts = 0;
-                let dayPrice = 0;
+            const memberCosts = {}; // { name: { slotsCount: 0, totalCost: 0 } }
 
-                Object.keys(appData.bookings[date]).forEach(slot => {
-                    const slotData = appData.bookings[date][slot];
-                    const members = slotData.members || [];
-                    const courts = slotData.courts || [{ id: 'c1' }];
-                    if (members.length > 0) {
-                        dayPeople += members.length;
-                        dayCourts += courts.length;
-                        const cCost = courts.length * appData.config.pricePerHour;
-                        const sCost = (slotData.shuttlesUsed || 0) * appData.config.shuttlePrice;
-                        dayPrice += (cCost + sCost);
+            TIME_SLOTS.forEach(slot => {
+                const slotData = appData.bookings[date][slot];
+                if (!slotData) return;
+
+                const members = slotData.members || [];
+                if (members.length === 0) return;
+
+                const courts = slotData.courts || [{ id: 'c1' }];
+                const courtCost = courts.length * appData.config.pricePerHour;
+                const shuttleCost = (slotData.shuttlesUsed || 0) * appData.config.shuttlePrice;
+                const totalSlotCost = courtCost + shuttleCost;
+
+                const costPerPersonInSlot = totalSlotCost / members.length;
+
+                members.forEach(m => {
+                    if (!memberCosts[m.name]) {
+                        memberCosts[m.name] = { slotsCount: 0, totalCost: 0 };
                     }
+                    memberCosts[m.name].slotsCount += 1;
+                    memberCosts[m.name].totalCost += costPerPersonInSlot;
                 });
+            });
 
+            const billItems = Object.keys(memberCosts).map(name => {
+                const existingItem = (appData.bills && appData.bills[date] && appData.bills[date].items)
+                    ? appData.bills[date].items.find(i => i.name === name)
+                    : null;
+
+                return {
+                    name: name,
+                    slotsCount: memberCosts[name].slotsCount,
+                    totalCost: existingItem ? existingItem.totalCost : Math.ceil(memberCosts[name].totalCost),
+                    paid: existingItem ? existingItem.paid : false,
+                    cleared: existingItem ? existingItem.cleared : false
+                };
+            });
+
+            if (!appData.bills) appData.bills = {};
+            appData.bills[date] = { items: billItems };
+
+            saveData();
+            renderBillChecklist();
+            renderUserView();
+            showToast('คำนวณและสรุปบิลของวันนี้เรียบร้อยแล้ว!');
+        }
+
+        function renderBillChecklist() {
+            const date = document.getElementById('admin-date').value;
+            const container = document.getElementById('bill-checklist-container');
+            if (!container) return;
+
+            const billData = appData.bills ? appData.bills[date] : null;
+            if (!billData || !billData.items || billData.items.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-400 italic text-center py-4">ยังไม่ได้คำนวณบิลสำหรับวันนี้ กดปุ่ม "คำนวณบิลวันนี้" เพื่อเริ่มจัดสรุปยอด</p>`;
+                return;
+            }
+
+            const activeItems = billData.items.filter(i => !i.cleared);
+            const clearedItems = billData.items.filter(i => i.cleared);
+
+            let totalPaidSum = billData.items.filter(i => i.paid).reduce((s, x) => s + x.totalCost, 0);
+            let totalUnpaidSum = billData.items.filter(i => !i.paid).reduce((s, x) => s + x.totalCost, 0);
+
+            let rowsHTML = activeItems.map((item) => {
+                const itemIdx = billData.items.indexOf(item);
                 return `
-                    <div class="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-xl border border-gray-100 text-xs">
-                        <div>
-                            <span class="font-bold text-gray-800">${date}</span>
-                            <span class="text-gray-500 ml-2">ผู้เล่น: ${dayPeople} คน | จอง: ${dayCourts} สนาม</span>
+                    <div class="flex items-center justify-between p-3 rounded-xl border transition ${item.paid ? 'bg-green-50/60 border-green-200' : 'bg-white border-gray-100'}">
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" ${item.paid ? 'checked' : ''} onchange="togglePaymentStatus('${date}', ${itemIdx})" class="w-4 h-4 text-mint-500 rounded focus:ring-mint-300 cursor-pointer">
+                            <div>
+                                <span class="font-semibold text-xs text-gray-800">${item.name}</span>
+                                <span class="text-[10px] text-gray-400 block">เล่นไป ${item.slotsCount} ชั่วโมง</span>
+                            </div>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <span class="font-semibold text-purple-600">${dayPrice.toLocaleString()} ฿</span>
-                            <button onclick="loadHistoryDate('${date}')" class="bg-purple-100 hover:bg-purple-200 text-purple-700 px-2 py-0.5 rounded-lg text-[10px] font-medium transition">
-                                ดูข้อมูล
-                            </button>
+                            <div class="text-right">
+                                <div class="flex items-center space-x-1">
+                                    <input type="number" value="${item.totalCost}" onchange="updateBillAmount('${date}', ${itemIdx}, this.value)" class="w-16 px-1.5 py-0.5 border border-gray-200 rounded text-xs font-bold text-right focus:ring-1 focus:ring-purple-300">
+                                    <span class="text-xs font-bold text-gray-700">฿</span>
+                                </div>
+                                <span class="text-[10px] block font-medium ${item.paid ? 'text-green-600' : 'text-orange-500'}">
+                                    ${item.paid ? '✓ โอนแล้ว' : '⏳ รอโอนเงิน'}
+                                </span>
+                            </div>
                         </div>
                     </div>
                 `;
             }).join('');
+
+            if (activeItems.length === 0) {
+                rowsHTML = `<p class="text-xs text-green-600 font-medium italic text-center py-3 bg-green-50 rounded-xl col-span-full">🎉 ชำระเงินครบทุกคนและเคลียร์รายการเรียบร้อยแล้ว!</p>`;
+            }
+
+            let clearedSummaryHTML = '';
+            if (clearedItems.length > 0) {
+                clearedSummaryHTML = `
+                    <div class="mt-3 pt-2 border-t border-gray-100">
+                        <span class="text-[11px] font-semibold text-gray-500 block mb-1">
+                            รายการที่ชำระเงินและเคลียร์แล้ว (${clearedItems.length} คน):
+                        </span>
+                        <div class="flex flex-wrap gap-1.5">
+                            ${clearedItems.map(c => `
+                                <span class="text-[10px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded-md border border-gray-200">
+                                    ✓ ${c.name} (${c.totalCost}฿)
+                                </span>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = `
+                <div class="flex justify-between items-center text-xs bg-gray-50 p-2.5 rounded-xl mb-3 border border-gray-100">
+                    <span>ยอดได้รับแล้ว: <strong class="text-green-600">${totalPaidSum} ฿</strong></span>
+                    <span>ยอดคงค้าง: <strong class="text-peach-500">${totalUnpaidSum} ฿</strong></span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    ${rowsHTML}
+                </div>
+                ${clearedSummaryHTML}
+            `;
         }
 
-        function loadHistoryDate(date) {
-            document.getElementById('admin-date').value = date;
-            document.getElementById('user-date').value = date;
+        function updateBillAmount(date, idx, newAmount) {
+            const val = parseFloat(newAmount) || 0;
+            if (appData.bills && appData.bills[date] && appData.bills[date].items[idx]) {
+                appData.bills[date].items[idx].totalCost = Math.ceil(val);
+                saveData();
+                renderBillChecklist();
+                renderUserView();
+                showToast(`แก้ไขยอดเงินของ ${appData.bills[date].items[idx].name} เรียบร้อยแล้ว`);
+            }
+        }
+
+        function togglePaymentStatus(date, idx) {
+            if (appData.bills && appData.bills[date] && appData.bills[date].items[idx]) {
+                appData.bills[date].items[idx].paid = !appData.bills[date].items[idx].paid;
+                saveData();
+                renderBillChecklist();
+                renderUserView();
+            }
+        }
+
+        function saveClearedPayments() {
+            const date = document.getElementById('admin-date').value;
+            if (!appData.bills || !appData.bills[date]) {
+                showToast('ยังไม่มีบิลให้เคลียร์ครับ', true);
+                return;
+            }
+
+            let count = 0;
+            appData.bills[date].items.forEach(item => {
+                if (item.paid && !item.cleared) {
+                    item.cleared = true;
+                    count++;
+                }
+            });
+
+            saveData();
+            renderBillChecklist();
+            renderUserView();
+            showToast(`บันทึกเคลียร์รายการจ่ายเงินเรียบร้อย (${count} คน)`);
+        }
+
+        // ================= COLOR CALENDAR LOGIC =================
+        function changeCalendarMonth(delta) {
+            currentCalDate.setMonth(currentCalDate.getMonth() + delta);
+            renderWeeklyCalendar();
+        }
+
+        function renderWeeklyCalendar() {
+            const container = document.getElementById('calendar-grid-container');
+            if (!container) return;
+
+            const year = currentCalDate.getFullYear();
+            const month = currentCalDate.getMonth();
+
+            const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+            document.getElementById('calendar-month-label').innerText = `${monthNames[month]} ${year}`;
+
+            const firstDayIndex = new Date(year, month, 1).getDay();
+            const totalDays = new Date(year, month + 1, 0).getDate();
+
+            const dayClassMap = ['day-sun', 'day-mon', 'day-tue', 'day-wed', 'day-thu', 'day-fri', 'day-sat'];
+            const dayHeaders = ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'];
+
+            let calendarHTML = `<div class="grid grid-cols-7 gap-1 text-center mb-2 font-bold text-xs text-gray-500">`;
+            dayHeaders.forEach(dh => {
+                calendarHTML += `<div>${dh}</div>`;
+            });
+            calendarHTML += `</div><div class="grid grid-cols-7 gap-1.5 text-center">`;
+
+            for (let i = 0; i < firstDayIndex; i++) {
+                calendarHTML += `<div class="h-16 bg-gray-50/50 rounded-xl"></div>`;
+            }
+
+            const activeSelectedDate = document.getElementById('admin-date').value;
+
+            for (let day = 1; day <= totalDays; day++) {
+                const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayOfWeek = new Date(year, month, day).getDay();
+                const dayColorClass = dayClassMap[dayOfWeek];
+
+                const dayPeopleSet = new Set();
+                const dayCourtsSet = new Set();
+
+                if (appData.bookings[dateString]) {
+                    Object.keys(appData.bookings[dateString]).forEach(s => {
+                        const slotData = appData.bookings[dateString][s];
+                        (slotData.members || []).forEach(m => dayPeopleSet.add(m.name));
+                        (slotData.courts || []).forEach(c => dayCourtsSet.add(c.name));
+                    });
+                }
+
+                const isSelected = dateString === activeSelectedDate;
+
+                calendarHTML += `
+                    <div onclick="selectCalendarDate('${dateString}')" class="h-16 p-1 rounded-xl border text-xs cursor-pointer transition transform hover:scale-105 flex flex-col justify-between ${dayColorClass} ${isSelected ? 'ring-2 ring-purple-600 shadow-md font-bold' : ''}">
+                        <div class="flex justify-between items-center text-[10px]">
+                            <span>${day}</span>
+                            ${isSelected ? '<i class="fa-solid fa-circle-check text-purple-600"></i>' : ''}
+                        </div>
+                        ${dayPeopleSet.size > 0 ? `
+                            <div class="bg-white/90 rounded-lg p-0.5 text-[9px] font-semibold text-gray-800 shadow-xs">
+                                🏸 ${dayPeopleSet.size} คน (${dayCourtsSet.size} คอร์ด)
+                            </div>
+                        ` : '<div class="text-[9px] text-gray-400 opacity-60">ว่าง</div>'}
+                    </div>
+                `;
+            }
+
+            calendarHTML += `</div>`;
+            container.innerHTML = calendarHTML;
+        }
+
+        function selectCalendarDate(dateStr) {
+            document.getElementById('admin-date').value = dateStr;
+            document.getElementById('user-date').value = dateStr;
             renderAdminView();
             renderUserView();
-            showToast(`โหลดข้อมูลของวันที่ ${date} เรียบร้อยแล้ว`);
+            showToast(`เลือกสลับเป็นวันที่ ${dateStr} แล้ว`);
         }
 
         // ================= MEMBER DASHBOARD STATS LOGIC =================
@@ -1188,13 +1663,11 @@
                 return;
             }
 
-            // 1. Shuffle participants array (Fisher-Yates)
             for (let i = participants.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [participants[i], participants[j]] = [participants[j], participants[i]];
             }
 
-            // 2. Pair up fixed teams of 2
             const fixedTeams = [];
             let pIndex = 0;
 
@@ -1220,14 +1693,12 @@
                 }
             }
 
-            // 3. Shuffle Team Queues for initial match rotation
             const shuffledTeams = [...fixedTeams];
             for (let i = shuffledTeams.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [shuffledTeams[i], shuffledTeams[j]] = [shuffledTeams[j], shuffledTeams[i]];
             }
 
-            // 4. Generate Match Slots
             const matches = [];
             const courts = slotData.courts || [{ id: 'c1' }];
 
@@ -1245,7 +1716,6 @@
                 }
             }
 
-            // Save fixed teams and current matches state
             if (!appData.matches[date]) appData.matches[date] = {};
             appData.matches[date][slot] = {
                 teams: fixedTeams,
@@ -1275,7 +1745,6 @@
 
             container.innerHTML = '';
 
-            // Display Fixed Teams Overview
             const teamsSection = document.createElement('div');
             teamsSection.className = "bg-purple-50/50 rounded-2xl p-4 border border-purple-100";
             let teamChips = matchData.teams.map((t, idx) => `
@@ -1295,7 +1764,6 @@
             `;
             container.appendChild(teamsSection);
 
-            // Display Active Court Matches
             const matchesGrid = document.createElement('div');
             matchesGrid.className = "grid grid-cols-1 md:grid-cols-2 gap-4";
 
@@ -1312,12 +1780,10 @@
                     </div>
 
                     <div class="grid grid-cols-2 gap-3 items-center text-center relative">
-                        <!-- Team A -->
                         <div class="bg-peach-50/50 p-3 rounded-xl border border-peach-100">
                             <div class="text-xs font-bold text-peach-500 mb-1">ทีม A</div>
                             <div class="text-xs text-gray-700 font-medium">${match.teamA.p1} & ${match.teamA.p2}</div>
                             
-                            <!-- Win Checkboxes -->
                             <div class="mt-2 flex justify-center items-center space-x-1">
                                 <span class="text-[10px] text-gray-400 mr-1">ชนะ:</span>
                                 <input type="checkbox" ${match.teamA.wins >= 1 ? 'checked' : ''} onchange="toggleWin('${date}', '${slot}', ${index}, 'A', 1)" class="w-4 h-4 text-peach-500 rounded focus:ring-peach-300">
@@ -1325,17 +1791,14 @@
                             </div>
                         </div>
 
-                        <!-- VS Badge -->
                         <div class="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-6 h-6 bg-purple-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow">
                             VS
                         </div>
 
-                        <!-- Team B -->
                         <div class="bg-mint-100/40 p-3 rounded-xl border border-mint-300/40">
                             <div class="text-xs font-bold text-mint-500 mb-1">ทีม B</div>
                             <div class="text-xs text-gray-700 font-medium">${match.teamB.p1} & ${match.teamB.p2}</div>
 
-                            <!-- Win Checkboxes -->
                             <div class="mt-2 flex justify-center items-center space-x-1">
                                 <span class="text-[10px] text-gray-400 mr-1">ชนะ:</span>
                                 <input type="checkbox" ${match.teamB.wins >= 1 ? 'checked' : ''} onchange="toggleWin('${date}', '${slot}', ${index}, 'B', 1)" class="w-4 h-4 text-mint-500 rounded focus:ring-mint-300">
